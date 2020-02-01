@@ -5,7 +5,7 @@
 
     <!-- Workspace and tools -->
     <project path="tools" name="workspace" dest-branch="master" groups="default">
-        <linkkfile src="Makefile" dest="Makefile"/>
+        <linkfile src="Makefile" dest="Makefile"/>
     </project>
 
     <!-- API -->
