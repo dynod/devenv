@@ -9,5 +9,5 @@
     </project>
 
     <!-- API -->
-    <project path="core/api" name="api" dest-branch="master" groups="core"/>
+    <project path="core/api" name="api" dest-branch="master" groups="notdefault,core"/>
 </manifest>
