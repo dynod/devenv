@@ -1,2 +1,1 @@
-# manifests
-Repo manifest for the stuffnodes projects
+# Development workspace for the stuffnodes projects
