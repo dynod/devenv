@@ -3,8 +3,8 @@ ifdef WORKSPACE_ROOT
 
 # Repo setup rules
 $(REPO_SETUP_RULES):
-	group=$(subst setup-,,$@) && repo init -u $(REPO_URL) -m $(REPO_MANIFEST) -g $$group
+	group=$(subst setup-,,$@) && repo init -u $(REPO_URL) -m $(REPO_MANIFEST) -g default,$$group
 	repo sync
-	repo forall -c git branch -t master
+	repo forall -c git checkout master
 
 endif # WORKSPACE_ROOT
