@@ -2,6 +2,7 @@
 ifdef WORKSPACE_ROOT
 
 # Repo setup rules
+.PHONY: $(REPO_SETUP_RULES)
 $(REPO_SETUP_RULES):
 	group=$(subst setup-,,$@) && repo init -u $(REPO_URL) -m $(REPO_MANIFEST) -g default,$$group
 	repo sync
