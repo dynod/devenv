@@ -10,12 +10,12 @@ $(SYNC_RULES):
 
 $(INIT_RULES):
 	# Init (for expected group, if any)
-	repo init -u $(REPO_URL) -m $(REPO_MANIFEST) -g default,$(GROUP_FROM_RULE)
+	$(REPO) init -u $(REPO_URL) -m $(REPO_MANIFEST) -g default,$(GROUP_FROM_RULE)
 
 sync:
 	# Sync + create local branch
-	repo sync
-	repo forall -c git checkout master
+	$(REPO) sync
+	$(REPO) forall -c git checkout master
 
 # All in one setup rules
 .PHONY: $(SETUP_RULES) setup

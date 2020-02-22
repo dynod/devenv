@@ -1,8 +1,9 @@
 # Repo definitions -- only works with full workspace
 ifdef WORKSPACE_ROOT
 
-# Repo root
+# Repo root and tool
 REPO_ROOT := $(WORKSPACE_ROOT)/.repo
+REPO := $(REPO_ROOT)/repo/repo
 
 # Repo metadata
 REPO_URL := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
