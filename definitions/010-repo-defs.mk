@@ -5,11 +5,18 @@ ifdef WORKSPACE_ROOT
 REPO_ROOT := $(WORKSPACE_ROOT)/.repo
 
 # Repo metadata
-REPO_URL = $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
-REPO_MANIFEST = $(shell $(REPO_HELPER) -r $(REPO_ROOT) --manifest)
-REPO_GROUPS = $(shell $(REPO_HELPER) -r $(REPO_ROOT) --groups)
+REPO_URL := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
+REPO_MANIFEST := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --manifest)
+REPO_GROUPS := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --groups)
 
-# Repo setup rules
-REPO_SETUP_RULES = $(foreach GROUP,$(REPO_GROUPS),setup-$(GROUP))
+# All in one setup rules
+SETUP_RULES := $(foreach GROUP,$(REPO_GROUPS),setup-$(GROUP))
+
+# Init/Sync rules
+SYNC_RULES := $(foreach GROUP,$(REPO_GROUPS),sync-$(GROUP))
+INIT_RULES := $(foreach GROUP,$(REPO_GROUPS),init-$(GROUP))
+
+# Get group from rule
+GROUP_FROM_RULE = $(shell echo $@ | cut -d - -f 2)
 
 endif # WORKSPACE_ROOT

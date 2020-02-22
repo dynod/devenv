@@ -3,4 +3,9 @@
 # Default
 .PHONY: help
 help:
-	cat $(TOOLS_ROOT)/README.md
+	$(PAGER) $(TOOLS_ROOT)/README.md
+
+# Help pages
+.PHONY: $(HELP_RULES)
+$(HELP_RULES):
+	$(PAGER) $(HELP_PAGE_FROM_TARGET)
