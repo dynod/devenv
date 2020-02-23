@@ -2,11 +2,7 @@
 ifdef WORKSPACE_ROOT
 
 # Repo init/sync rules
-.PHONY: $(SYNC_RULES) $(INIT_RULES) sync
-
-$(SYNC_RULES):
-	# Has to do it this crappy way, because patterns (e.g. sync-%: init-%) don't work with PHONY targets
-	make init-$(GROUP_FROM_RULE) sync
+.PHONY: $(INIT_RULES) sync
 
 $(INIT_RULES):
 	# Init (for expected group, if any)
@@ -17,13 +13,13 @@ sync:
 	$(REPO) sync
 	$(REPO) forall -c git checkout master
 
-# All in one setup rules
+# All in one setup rules (= init + setup)
 .PHONY: $(SETUP_RULES) setup
 $(SETUP_RULES):
-	# Has to do it this crappy way, because patterns (e.g. setup-%: sync-%) don't work with PHONY targets
-	make sync-$(GROUP_FROM_RULE)
+	# Has to do it this crappy way, because patterns (e.g. setup-%: init-%) don't work with PHONY targets
+	make init-$(GROUP_FROM_RULE) setup
 
-# Setup for current group
+# Setup once the group is initialized
 setup: sync
 
 endif # WORKSPACE_ROOT

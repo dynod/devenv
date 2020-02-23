@@ -17,17 +17,21 @@ sets for the current workspace, and/or refer to the workspace documentation.
 
 This target handles the complete setup of the selected project set (**xxx**).
 It is a global target that successively handles the following steps:
-* Synchronize the source code (see **sync-xxx**)
+* Select the project set (see **init-xxx**)
+* Synchronize the source code (see **sync**)
 * Verify system dependencies (TBD)
 * Prepare development environment (TBD)
 
 Note that the simple **setup** target can be used to re-execute the
 setup process for the current project set (except the group selection).
 
-## Source code synchronization - "sync-xxx"
+## Project set selection - "init-xxx"
 
-This target handle the necessary **`repo`** commands to:
-* initialize the workspace with the chosen project set (group)
-  (also handled by **init-xxx** target)
-* trigger source code synchronization + create local branches
-  (also handled by **sync** target)
+This target handle the necessary **`repo init`** command to initialize the 
+workspace with the chosen project set (group)
+
+## Source code synchronization - "sync"
+
+This target handle the necessary **`repo sync`** command to trigger source 
+code synchronization.
+It also prepare local branch for all projects in the workspace.

@@ -14,7 +14,6 @@ REPO_GROUPS := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --groups)
 SETUP_RULES := $(foreach GROUP,$(REPO_GROUPS),setup-$(GROUP))
 
 # Init/Sync rules
-SYNC_RULES := $(foreach GROUP,$(REPO_GROUPS),sync-$(GROUP))
 INIT_RULES := $(foreach GROUP,$(REPO_GROUPS),init-$(GROUP))
 
 # Get group from rule
