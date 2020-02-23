@@ -19,7 +19,9 @@ $(SETUP_RULES):
 	# Has to do it this crappy way, because patterns (e.g. setup-%: init-%) don't work with PHONY targets
 	make init-$(GROUP_FROM_RULE) setup
 
-# Setup once the group is initialized
-setup: sync
+# Setup once the group is initialized:
+# - synchronize repo and create local branches
+# - prepare Python Virtual env (if any)
+setup: sync $(PYTHON_VENV)
 
 endif # WORKSPACE_ROOT

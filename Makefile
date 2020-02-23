@@ -2,12 +2,13 @@
 # Main makefile for stuffnodes projects
 #
 
-# Determine workspace root
+# Determine workspace/project/tools root
 ifneq ("$(wildcard $(CURDIR)/.repo)","")
 WORKSPACE_ROOT := $(CURDIR)
 else
 ifneq ("$(wildcard $(CURDIR)/../.repo)","")
 WORKSPACE_ROOT := $(CURDIR)/..
+PROJECT_ROOT := $(CURDIR)
 endif
 endif
 TOOLS_ROOT := $(WORKSPACE_ROOT)/tools

@@ -10,4 +10,5 @@ SHELL := /bin/bash
 .PHONY: default all
 
 # Include other more specific stuff
-include $(wildcard $(TOOLS_ROOT)/definitions/*.mk)
+# Don't use make "wildcard" function, as it doesn't look to return files in alphabetical order
+include $(shell ls $(TOOLS_ROOT)/definitions/*.mk)
