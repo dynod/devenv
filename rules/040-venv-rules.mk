@@ -31,5 +31,10 @@ ifndef PROJECT_ROOT
 $(PYTHON_VENV) clean-venv:
 	$(REPO) forall -c "pwd && make $@"
 
+else # !PROJECT_ROOT
+
+# In a non-Python project, just stub venv targets
+$(PYTHON_VENV) clean-venv: stub
+
 endif # !PROJECT_ROOT
 endif # IS_PYTHON_PROJECT
