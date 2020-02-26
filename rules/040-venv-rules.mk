@@ -9,27 +9,26 @@ ifdef IS_PYTHON_PROJECT
 # Virtual env for current project
 # Handle clean of venv folder if something went wrong...
 $(PYTHON_VENV): $(PYTHON_VENV_REQUIREMENTS)
-	RC=0 && \
-	$(PYTHON_FOR_VENV) -m venv $(PYTHON_VENV) || RC=$$? && \
-	if test "$$RC" -ne 0; then \
-		echo "Cleaning corrupted $(PYTHON_VENV) folder" && \
-		rm -R $(PYTHON_VENV); \
-		exit $$RC; \
-	fi
-	# Finaly finish setup by doing pip installs
-	(source $(PYTHON_VENV)/bin/activate && pip install $(foreach DEPFILE,$<,-r $(DEPFILE)))
-	touch $(PYTHON_VENV)
+	$(GIFT_STATUS) -s "Create Python virtual environment" $(HELPERS_ROOT)/setup-venv.sh $(PYTHON_FOR_VENV) $(PYTHON_VENV) $<
 
 # Clean virtual env
 clean-venv:
-	rm -R $(PYTHON_VENV)
+	$(CLEAN_STATUS) -s "Clean Python virtual environment" rm -Rf $(PYTHON_VENV)
 
 else # IS_PYTHON_PROJECT
+
+# If not in a Python project, venv is phony
+.PHONY: $(PYTHON_VENV)
+
 ifndef PROJECT_ROOT
 
 # At workspace root, trigger venv build for all projects
-$(PYTHON_VENV) clean-venv:
-	$(REPO) forall -c "pwd && make $@"
+clean-venv:
+	$(MULTI_STATUS) -s "Clean all Python virtual environments"
+	NO_BUILD_LOGS_CLEAN=1 $(REPO) forall -c "make $@"
+$(PYTHON_VENV):
+	$(MULTI_STATUS) -s "Create all Python virtual environments"
+	NO_BUILD_LOGS_CLEAN=1 $(REPO) forall -c "make $@"
 
 else # !PROJECT_ROOT
 
