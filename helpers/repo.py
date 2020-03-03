@@ -12,9 +12,15 @@ from pathlib import Path
 
 class RepoHandler:
     def __init__(self, root: Path):
-        self.manifest_path = (root / "manifest.xml").resolve()
+        manifest_link = root / "manifest.xml"
+        self.manifest_path = manifest_link.resolve()
         self.manifests_root = (root / "manifests").resolve()
         self.dom = minidom.parse(self.manifest_path.as_posix())
+
+        # Resolve to real (included) manifest if not a link
+        if not manifest_link.is_symlink():
+            self.manifest_path = self.manifests_root / next(self.includes).attributes["name"].value
+            self.dom = minidom.parse(self.manifest_path.as_posix())
 
     @property
     def manifest(self) -> minidom.Node:
@@ -23,6 +29,10 @@ class RepoHandler:
     @property
     def projects(self) -> minidom.NodeList:
         return filter(lambda n: n.nodeName == "project", self.manifest.childNodes)
+
+    @property
+    def includes(self) -> minidom.NodeList:
+        return filter(lambda n: n.nodeName == "include", self.manifest.childNodes)
 
     def project_groups(self, project: minidom.Node) -> list:
         return project.attributes["groups"].value.split(",") if "groups" in project.attributes else []

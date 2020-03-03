@@ -8,7 +8,7 @@
             "name": "Python: repo helper - get groups",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/helpers/repo-helper",
+            "program": "${workspaceRoot}/helpers/repo.py",
             "console": "integratedTerminal",
             "args": [
                 "-r",
@@ -20,7 +20,7 @@
             "name": "Python: repo helper - get url",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/helpers/repo-helper",
+            "program": "${workspaceRoot}/helpers/repo.py",
             "console": "integratedTerminal",
             "args": [
                 "-r",
@@ -32,7 +32,7 @@
             "name": "Python: repo helper - get manifest",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/helpers/repo-helper",
+            "program": "${workspaceRoot}/helpers/repo.py",
             "console": "integratedTerminal",
             "args": [
                 "-r",
