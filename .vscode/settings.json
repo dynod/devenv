@@ -1,10 +1,17 @@
 {
     "python.pythonPath": "venv/bin/python",
+    "python.autoComplete.extraPaths": [
+        "helpers"
+    ],
     "cSpell.words": [
+        "DEPS",
         "Makefiles",
         "devenv",
+        "nargs",
+        "pyvenv",
         "strftime",
         "stuffnodes",
+        "sysdeps",
         "venv"
     ]
 }
