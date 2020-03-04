@@ -18,11 +18,12 @@ sync:
 $(SETUP_RULES):
 	# Has to do it this crappy way, because patterns (e.g. setup-%: init-%) don't work with PHONY targets
 	$(SETUP_STATUS) -s "Setup workspace for $(GROUP_FROM_RULE) projects set"
-	NO_BUILD_LOGS_CLEAN=1 make init-$(GROUP_FROM_RULE) setup
+	SUB_MAKE=1 make init-$(GROUP_FROM_RULE) setup
 
 # Setup once the group is initialized:
 # - synchronize repo and create local branches
+# - check system dependencies
 # - prepare Python Virtual env (if any)
-setup: sync $(PYTHON_VENV)
+setup: sync sysdeps $(PYTHON_VENV)
 
 endif # WORKSPACE_ROOT

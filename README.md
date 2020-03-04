@@ -14,7 +14,13 @@ by this tools set.
 
 ## Setup tasks
 
-Tasks are provided to handle different workspace setup tasks (source code
+Make targets are provided to handle different workspace setup tasks (source code
 fetching, dependencies resolution, etc...).
 
 See [related page](./doc/setup.md) or **`make help-setup`**
+
+## Miscellaneous
+
+Finally, some variables are provided to tune the targets behavior.
+
+See [related page](./doc/misc.md) or **`make help-misc`**

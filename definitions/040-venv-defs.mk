@@ -9,7 +9,7 @@ ifdef IS_PYTHON_PROJECT
 # Python binary that will be used to setup the virtual environment
 PYTHON_FOR_VENV ?= python3
 
-# Requirements files (may be appended with project-specific requirements)
-PYTHON_VENV_REQUIREMENTS ?= $(PYTHON_SHARED_SETTINGS)/requirements-tools.txt
+# List project requirements files + shared ones
+PYTHON_VENV_REQUIREMENTS := $(shell find $(ALL_PYTHON_SHARED_SETTINGS) $(PYTHON_PROJECT_SETTINGS) -maxdepth 1 -name *.txt 2> /dev/null)
 
 endif # IS_PYTHON_PROJECT

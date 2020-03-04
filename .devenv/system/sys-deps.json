@@ -1,0 +1,5 @@
+{
+    "/usr/share/doc/python3-venv": {
+        "apt": "python3-venv"
+    }
+}

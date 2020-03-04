@@ -19,4 +19,18 @@ INIT_RULES := $(foreach GROUP,$(REPO_GROUPS),init-$(GROUP))
 # Get group from rule
 GROUP_FROM_RULE = $(shell echo $@ | cut -d - -f 2)
 
-endif # WORKSPACE_ROOT
+# Projects
+PROJECTS := $(foreach P,$(shell cat $(REPO_ROOT)/project.list),$(WORKSPACE_ROOT)/$(P))
+
+# Cache dir will be in the repo root
+CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
+
+else # !WORKSPACE_ROOT
+
+# Projects
+PROJECTS := $(PROJECT_ROOT) $(TOOLS_ROOT)
+
+# Cache dir will be in the project git dir
+CACHE_DIR := $(shell mkdir -p $(PROJECT_ROOT)/.git/.cache && echo $(PROJECT_ROOT)/.git/.cache)
+
+endif # !WORKSPACE_ROOT

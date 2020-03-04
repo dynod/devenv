@@ -3,8 +3,8 @@
 # Python settings files
 PYTHON_SETTINGS := $(DEVENV)/python
 
-# Python shared settings files
-PYTHON_SHARED_SETTINGS := $(TOOLS_ROOT)/$(PYTHON_SETTINGS)
+# All Python shared settings folders
+ALL_PYTHON_SHARED_SETTINGS := $(foreach P,$(PROJECTS),$(P)/$(PYTHON_SETTINGS)/shared)
 
 # Project specific defs
 ifdef PROJECT_ROOT

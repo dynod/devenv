@@ -19,7 +19,7 @@ This target handles the complete setup of the selected project set (**xxx**).
 It is a global target that successively handles the following steps:
 * Select the project set (see **init-xxx**)
 * Synchronize the source code (see **sync**)
-* Verify system dependencies (TBD)
+* Verify system dependencies (see **sysdeps**)
 * Prepare development environment (see **venv**)
 
 Note that the simple **setup** target can be used to re-execute the
@@ -46,21 +46,63 @@ are available for development environment setup.
 Each project can define its own development environment settings.
 These settings are stored in the **.devenv** folder under the project root.
 
-### Python projects
+### Verify system dependencies - "sysdeps"
+
+This target verifies that all necessary system dependencies are installed, so
+that other tasks can be handled properly.
+
+Each project can declare its dependencies in simple **txt** files in their
+**system** settings folder.
+
+Each file in these **txt** files is a requirement to be verified; it can be:
+* either an absolute path; the requirement is considered as missing if this path
+  doesn't exist
+* or a simple *command*; the requirement is considered as missing if a
+  **`which`** *`command`* call fails
+
+If there is at least a missing requirement, an install process is triggered.
+System packages to be installed for each requirement are resolved by parsing
+"database" files named **sys-deps.json** in **system** settings folders.
+
+These json files syntax is:
+```json
+{
+    "requirement": {
+        "apt": "package"
+    }
+}
+```
+Where:
+* `requirement`: the requirement to be resolved (the same than in **txt** files)
+* `apt`: package manager (only **apt** is supported at the moment)
+* `package`: name of the package to be installed
+See [example database file](../.devenv/system/sys-deps.json)
+
+System dependencies verification is incremental and only verified:
+* on first setup
+* if requirements or "database" files are modified
+* if packages have been modified on the system
+
+The process behavior can be modified by setting the following variables:
+* **`SYSDEPS_REINSTALL`**: bypass requirements verification and incremental
+  behavior, and reinstall all packages
+* **`SYSDEPS_YES`**: don't prompt before installing packages
+
+### Python projects virtual environment - "venv"
 
 Python projects are identified by providing a **python** folder in their
 settings folder. The following setup targets are available for python projects.
 
-#### Virtual environment - "venv"
-
 Python virtual environment can be setup by using the **venv** target.
 By the way, this target is also part of the all in one **setup**.
 
-The virtual environment is built from a list of requirements, stored in the
-**PYTHON_VENV_REQUIREMENTS** variable. This variable is initially populated
-with the shared requirements, and can be then appended by project Makefile with
-their own requirement files.
+The virtual environment is built from a list of requirements, automatically
+gathered from all **.txt** files in the **python** settings folder of current
+project.
+Note that any project can provide shared requirements in their **python/shared**
+settings folder. These requirements will be installed in all projects of the 
+workspace
 
 The Python executable used to setup the virtual environment is configured in 
-the **PYTHON_FOR_VENV** variable (default value is *python3*). It can be 
+the **`PYTHON_FOR_VENV`** variable (default value is *python3*). It can be 
 configured to something else by any project.
