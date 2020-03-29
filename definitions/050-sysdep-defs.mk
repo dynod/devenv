@@ -7,7 +7,7 @@ SYSTEM_SETTINGS := $(DEVENV)/system
 ALL_SYSTEM_SETTINGS := $(foreach P,$(PROJECTS),$(P)/$(SYSTEM_SETTINGS))
 
 # Databases listing "how to install" missing packages
-SYSDEP_DATABASE := $(shell find $(ALL_SYSTEM_SETTINGS) -name sys-deps.json 2> /dev/null)
+SYSDEP_DATABASE := $(shell find $(ALL_SYSTEM_SETTINGS) -name sysdeps.json 2> /dev/null)
 
 # All system requirements
 SYSDEP_REQUIREMENTS := $(shell find $(ALL_SYSTEM_SETTINGS) -name *.txt 2> /dev/null)

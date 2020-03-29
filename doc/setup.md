@@ -62,7 +62,7 @@ Each file in these **txt** files is a requirement to be verified; it can be:
 
 If there is at least a missing requirement, an install process is triggered.
 System packages to be installed for each requirement are resolved by parsing
-"database" files named **sys-deps.json** in **system** settings folders.
+"database" files named **sysdeps.json** in **system** settings folders.
 
 These json files syntax is:
 ```json
@@ -76,7 +76,7 @@ Where:
 * `requirement`: the requirement to be resolved (the same than in **txt** files)
 * `apt`: package manager (only **apt** is supported at the moment)
 * `package`: name of the package to be installed
-See [example database file](../.devenv/system/sys-deps.json)
+See [example database file](../.devenv/system/sysdeps.json)
 
 System dependencies verification is incremental and only verified:
 * on first setup

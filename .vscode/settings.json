@@ -1,13 +1,22 @@
 {
     "python.pythonPath": "venv/bin/python",
     "python.autoComplete.extraPaths": [
-        "helpers"
+        "helpers",
+        "tests"
     ],
+    "python.testing.pytestEnabled": true,
     "cSpell.words": [
         "DEPS",
         "Makefiles",
+        "XDIST",
+        "datefmt",
         "devenv",
+        "dynod",
+        "isort",
+        "msecs",
         "nargs",
+        "noreqs",
+        "pytest",
         "pyvenv",
         "strftime",
         "sysdeps",

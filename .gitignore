@@ -4,3 +4,9 @@ venv/
 # Python temporary files
 __pycache__
 *.pyc
+
+# All outputs
+out/
+
+# Coverage
+.coverage

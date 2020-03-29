@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
 
+import json
+import shutil
+import subprocess
+
 # Helper script for system dependencies handling
 import sys
-import shutil
-import json
-import subprocess
-from typing import Set, List
 from abc import ABC, abstractmethod
+from argparse import ONE_OR_MORE, ArgumentParser, Namespace
 from pathlib import Path
-from argparse import ArgumentParser, Namespace, ONE_OR_MORE
-from common import prompt_user, pretty_print, get_stamp, Icon, Level, get_name_and_target, add_common_args, capture_cmd
+from typing import List, Set
 
-
-# Env var names
-SYS_DEPS_YES_ENV = "SYS_DEPS_YES"
+from common import Icon, Level, add_common_args, capture_cmd, get_name_and_target, get_stamp, pretty_print, prompt_user
 
 
 class Resolver(ABC):
@@ -48,20 +46,23 @@ class Resolver(ABC):
 
     def is_missing(self, requirement: str) -> bool:
         req_path = Path(requirement)
-        if req_path.is_absolute:
+        if req_path.is_absolute():
             # Absolute path: just check for existence
             return not req_path.exists()
 
         # Otherwise assume this is a command name: check on path
         return shutil.which(requirement) is None
 
-    def resolve(self, args: Namespace):
+    def resolve(self, args: Namespace) -> int:
         all_requirements = self.build_requirements(args)
         requirements = filter(self.is_missing, all_requirements) if not args.reinstall else all_requirements
         packages = self.resolve_package_names(args, requirements)
         if len(packages) > 0:
             # Delegate to package manager only if there is something to install
-            self.resolve_packages(args, packages)
+            return self.resolve_packages(args, packages)
+
+        # Nothing to resolve
+        return 0
 
     def resolve_packages(self, args: Namespace, packages: Set[str]):
         # Build command lines
@@ -87,8 +88,7 @@ class Resolver(ABC):
             # Prompt before running
             if not prompt_user("Ready to go"):
                 # Install refused
-                pretty_print(get_stamp(), Icon.ERROR, name, target, Level.ERROR, "Install cancelled")
-                sys.exit(1)
+                raise AssertionError("Install cancelled")
 
             print("")
 
@@ -99,15 +99,20 @@ class Resolver(ABC):
         if uid != "0":
             rc = subprocess.call(["sudo", "true"])
             if rc != 0:
-                sys.exit(rc)
+                return rc
 
         for cmd in commands:
             # Ok to run
             pretty_print(get_stamp(), Icon.FLOPPY, name, target, Level.INFO, " >>> " + " ".join(cmd))
-            capture_cmd(args, cmd)
+            rc = capture_cmd(args, cmd)
+            if rc != 0:
+                return rc
+
+        # All went OK!
+        return 0
 
     @abstractmethod
-    def get_install_commands(self, packages: Set[str]) -> List[List[str]]:
+    def get_install_commands(self, packages: Set[str]) -> List[List[str]]:  # pragma: no cover
         pass
 
 
@@ -133,10 +138,10 @@ def get_resolver() -> Resolver:
     # Detect resolver according to available package management system
     if shutil.which("apt") is not None:
         return AptResolver()
-    raise AssertionError("Unable to find a packaging tool for the current system")
+    raise NotImplementedError("Unable to find a packaging tool for the current system")
 
 
-def main():
+def main(input_args: list):
     # Small parser
     parser = ArgumentParser(description="Helper script to check system dependencies")
     add_common_args(parser)
@@ -144,13 +149,19 @@ def main():
     parser.add_argument("-r", "--reinstall", action="store_true", default=False, help="Don't check if package is already installed")
     parser.add_argument("-d", "--database", action="append", type=Path, required=True, help="Path to database file")
     parser.add_argument("requirements", nargs=ONE_OR_MORE, type=Path, help="List of system requirement files")
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(input_args)
 
     # Build requirements list from provided files
     # ... and filter the missing ones
     # ... then let the resolver doing its job
-    get_resolver().resolve(args)
+    try:
+        rc = get_resolver().resolve(args)
+    except Exception as e:
+        name, target = get_name_and_target(args)
+        pretty_print(get_stamp(), Icon.ERROR, name, target, Level.ERROR, str(e))
+        rc = 1
+    return rc
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__":  # pragma: no cover
+    sys.exit(main(sys.argv[1:]))

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+    <remote name="some-github" alias="origin" fetch="."/>
+    <default remote="some-github" revision="refs/heads/master"/>
+
+    <!-- Tools -->
+    <project path="tools" name="tools" dest-branch="master" groups="tools">
+        <linkfile src="Makefile" dest="Makefile"/>
+    </project>
+
+    <!-- Workspace stuff -->
+    <project path=".workspace" name="workspace" dest-branch="master" groups="tools"/>
+
+    <!-- Core -->
+    <project path="core/api" name="api" dest-branch="master" groups="notdefault,core"/>
+</manifest>

@@ -15,6 +15,16 @@ PYTHON_PROJECT_SETTINGS := $(PROJECT_ROOT)/$(PYTHON_SETTINGS)
 # Is Python project?
 ifneq ("$(wildcard $(PYTHON_PROJECT_SETTINGS))","")
 IS_PYTHON_PROJECT := 1
-endif
+
+# Configure source folder
+SRC_FOLDER ?= src/
+
+# All Python source files
+SRC_FILES := $(shell find $(SRC_FOLDER) -name *.py)
+
+# Setup file
+PYTHON_SETUP := $(PROJECT_ROOT)/setup.cfg
+
+endif # IS_PYTHON_PROJECT
 
 endif # PROJECT_ROOT
