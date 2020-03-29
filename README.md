@@ -12,12 +12,18 @@ support from scratch, without complex dependencies.
 The following pages describe the different features and tasks supported
 by this tools set.
 
-## Setup tasks
+## Setup
 
 Make targets are provided to handle different workspace setup tasks (source code
 fetching, dependencies resolution, etc...).
 
 See [related page](./doc/setup.md) or **`make help-setup`**
+
+## Tests
+
+Software tests are also handled through make targets.
+
+See [related page](./doc/tests.md) or **`make help-tests`**
 
 ## Miscellaneous
 

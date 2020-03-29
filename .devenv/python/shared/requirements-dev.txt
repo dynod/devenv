@@ -1,5 +1,4 @@
 ## Tools
-rope
 black
 
 ## Flake8 & plugins

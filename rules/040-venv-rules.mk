@@ -17,11 +17,11 @@ endif
 # Virtual env for current project
 # Handle clean of venv folder if something went wrong...
 $(PYTHON_VENV): $(PYTHON_VENV_DEPS)
-	$(GIFT_STATUS) -s "Create Python virtual environment" $(HELPERS_ROOT)/setup-venv.sh $(PYTHON_FOR_VENV) $(PYTHON_VENV) $<
+	$(GIFT_STATUS) --lang python -s "Create Python virtual environment" $(HELPERS_ROOT)/setup-venv.sh $(PYTHON_FOR_VENV) $(PYTHON_VENV) $(PYTHON_VENV_REQUIREMENTS)
 
 # Clean virtual env
 clean-venv:
-	$(CLEAN_STATUS) -s "Clean Python virtual environment" rm -Rf $(PYTHON_VENV)
+	$(CLEAN_STATUS) --lang python -s "Clean Python virtual environment" rm -Rf $(PYTHON_VENV)
 
 else # IS_PYTHON_PROJECT
 

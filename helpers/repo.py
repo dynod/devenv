@@ -2,12 +2,12 @@
 
 # Helper script for repo handling
 
-import sys
 import re
 import subprocess
+import sys
 from argparse import ArgumentParser
-from xml.dom import minidom
 from pathlib import Path
+from xml.dom import minidom
 
 
 class RepoHandler:
@@ -43,19 +43,19 @@ class RepoHandler:
 
     def print_groups(self):
         # Get filtered groups (i.e. without the default/notdefault ones)
-        print(" ".join(filter(lambda g: g not in ["default", "notdefault"], self.groups)))
+        return " ".join(sorted(filter(lambda g: g not in ["default", "notdefault"], self.groups)))
 
     def print_url(self):
         # Get remote URL
         git_out = str(subprocess.check_output(["git", "remote", "-v"], cwd=self.manifests_root), encoding="utf-8")
-        print(re.match(r"[^ ]+[ \t]+([^ ]+)[ \t]+[^ ]+", git_out.splitlines()[0]).group(1))
+        return re.match(r"[^ ]+[ \t]+([^ ]+)[ \t]+[^ ]+", git_out.splitlines()[0]).group(1)
 
     def print_manifest(self):
         # Get manifest relative path
-        print(self.manifest_path.relative_to(self.manifests_root).as_posix())
+        return self.manifest_path.relative_to(self.manifests_root).as_posix()
 
 
-def main():
+def main(args):
     # Parse args
     parser = ArgumentParser(description="Helper script for repo metadata")
     parser.add_argument("-r", "--root", type=Path, required=True, help="Path to repo root")
@@ -63,7 +63,7 @@ def main():
     actions.add_argument("-g", "--groups", action="store_true", help="Display manifest available groups list")
     actions.add_argument("-u", "--url", action="store_true", help="Display manifest repository remote URL")
     actions.add_argument("-m", "--manifest", action="store_true", help="Display current manifest relative path")
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args(args)
 
     # Prepare repo metadata reader
     repo_root = RepoHandler(args.root)
@@ -74,13 +74,11 @@ def main():
     actions[args.url] = repo_root.print_url
     actions[args.manifest] = repo_root.print_manifest
     if True in actions:
-        actions[True]()
+        return actions[True]()
     else:
-        print("No action specified")
+        return "No action specified"
 
-    # We're done
+
+if __name__ == "__main__":  # pragma: no cover
+    print(main(sys.argv[1:]))
     sys.exit(0)
-
-
-if __name__ == "__main__":
-    main()

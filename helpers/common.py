@@ -1,11 +1,15 @@
 """
 Some shared functions for helpers
 """
-import time
 import subprocess
-import sys
+import time
 from enum import Enum
 from pathlib import Path
+
+
+# Language names
+class Language(Enum):
+    PYTHON = "python"
 
 
 # Icon names
@@ -24,24 +28,30 @@ class Icon(Enum):
     PUZZLE = "puzzle"
     FLOPPY = "floppy"
     RIGHT_FINGER = "right_finger"
+    CROSS_FINGER = "cross_finger"
+    EYE = "eye"
+    SNAKE = "snake"
 
 
 # Map icons enum to real icons
 ICONS = {
-    Icon.BUILD: "\U0001F6E0 ",
-    Icon.CLEAN: "\U0001F9F9 ",
-    Icon.TARGET: "\U0001F3AF ",
-    Icon.FOLDER: "\U0001F4C2 ",
-    Icon.ERROR: "\U0001F480 ",
-    Icon.SETUP: "\U0001F680 ",
-    Icon.GIFT: "\U0001F381 ",
-    Icon.SLEEP: "\U0001F4A4 ",
-    Icon.MULTI: "\U0001F500 ",
-    Icon.BRANCH: "\U0001F33F ",
-    Icon.SYNC: "\U0001F300 ",
-    Icon.PUZZLE: "\U0001F9E9 ",
-    Icon.FLOPPY: "\U0001F4BE ",
-    Icon.RIGHT_FINGER: "\U0001F449 ",
+    Icon.BUILD: "\U0001F6E0",
+    Icon.CLEAN: "\U0001F9F9",
+    Icon.TARGET: "\U0001F3AF",
+    Icon.FOLDER: "\U0001F4C2",
+    Icon.ERROR: "\U0001F480",
+    Icon.SETUP: "\U0001F680",
+    Icon.GIFT: "\U0001F381",
+    Icon.SLEEP: "\U0001F4A4",
+    Icon.MULTI: "\U0001F500",
+    Icon.BRANCH: "\U0001F33F",
+    Icon.SYNC: "\U0001F300",
+    Icon.PUZZLE: "\U0001F9E9",
+    Icon.FLOPPY: "\U0001F4BE",
+    Icon.RIGHT_FINGER: "\U0001F449",
+    Icon.CROSS_FINGER: "\U0001F91E",
+    Icon.EYE: "\U0001F441 ",
+    Icon.SNAKE: "\U0001F40D",
 }
 
 
@@ -65,6 +75,9 @@ class Styles:
 # Map levels to colors
 LVL_STYLES = {Level.INFO: Styles.RESET, Level.WARNING: Styles.YELLOW, Level.ERROR: Styles.RED}
 
+# Map languages to icons
+LANG_ICONS = {Language.PYTHON: Icon.SNAKE}
+
 
 # Get current timestamp string
 def get_stamp():
@@ -72,9 +85,10 @@ def get_stamp():
 
 
 # Pretty print function
-def pretty_print(stamp: str, icon: Icon, name: str, target: str, level: Level, status: str):
+def pretty_print(stamp: str, icon: Icon, name: str, target: str, level: Level, status: str, language: Language = None):
     print(
         f"{Styles.GREEN}{stamp}{Styles.RESET} "  # Timestamp
+        + (f"{ICONS[LANG_ICONS[language]]}" if language is not None else "")  # Language icon
         + f"{ICONS[icon]} "  # Action icon
         + f"{Styles.BOLD}{ICONS[Icon.FOLDER]}{name} "  # Folder (project)
         + f"{ICONS[Icon.TARGET]}{target} "  # Current target name
@@ -111,9 +125,12 @@ def get_name_and_target(args):
 
 
 # Run command and capture output
-def capture_cmd(args, cmd, stamp=None):
+def capture_cmd(args, cmd, stamp=None) -> int:
+    cmd_trace = f">>> Executing command: {' '.join(cmd)}\n"
+
     if args.verbose:
         # Just run command, don't capture output
+        print(cmd_trace)
         rc = subprocess.call(cmd)
     else:
         name, target = get_name_and_target(args)
@@ -124,17 +141,29 @@ def capture_cmd(args, cmd, stamp=None):
 
         # Output files
         f_stamp = (stamp if stamp is not None else get_stamp()).replace(":", "_")
-        out = output / f"{f_stamp}-{name}-{target}.out"
-        err = output / f"{f_stamp}-{name}-{target}.err"
+        cmd_f = output / f"{f_stamp}-{name}-{target}.cmd"
+        out_f = output / f"{f_stamp}-{name}-{target}.out"
+        err_f = output / f"{f_stamp}-{name}-{target}.err"
 
         # Run process and redirect outputs
-        with out.open("w") as o, err.open("w") as e:
-            o.write(f">>> Executing command: {' '.join(cmd)}\n")
+        with cmd_f.open("w") as c, out_f.open("w") as o, err_f.open("w") as e:
+            c.write(cmd_trace)
             rc = subprocess.call(cmd, stdout=o, stderr=e)
 
-    # Something went wrong?
-    if rc != 0:
-        pretty_print(get_stamp(), Icon.ERROR, name, target, Level.ERROR, f"!!! ERROR !!! -- see output in {out}")
-        with err.open("r") as e:
-            print(e.read())
-        sys.exit(rc)
+        # Remove empty files
+        for f in [out_f, err_f]:
+            if f.stat().st_size == 0:
+                f.unlink()
+
+        # Something went wrong?
+        if rc != 0:
+            # Print sub-process outputs
+            pretty_print(get_stamp(), Icon.ERROR, name, target, Level.ERROR, f"!!! ERROR !!!")
+            for f in [out_f, err_f]:
+                if f.exists():
+                    print(f">>> {f} >>>")
+                    with f.open("r") as e:
+                        print(e.read())
+
+    # In all cases, return sub-process rc
+    return rc
