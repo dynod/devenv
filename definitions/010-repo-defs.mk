@@ -28,7 +28,7 @@ CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
 else # !WORKSPACE_ROOT
 
 # Projects
-PROJECTS := $(PROJECT_ROOT) $(TOOLS_ROOT)
+PROJECTS := $(PROJECT_ROOT) $(DEVENV_ROOT)
 
 # Cache dir will be in the project git dir
 CACHE_DIR := $(shell mkdir -p $(PROJECT_ROOT)/.git/.cache && echo $(PROJECT_ROOT)/.git/.cache)

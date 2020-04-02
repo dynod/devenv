@@ -1,7 +1,7 @@
 # Some definitions for help pages
 
 # Help pages
-HELP_ROOT := $(TOOLS_ROOT)/doc
+HELP_ROOT := $(DEVENV_ROOT)/doc
 HELP_PAGES := $(wildcard $(HELP_ROOT)/*.md)
 
 # URL root

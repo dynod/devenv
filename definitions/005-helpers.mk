@@ -1,5 +1,5 @@
 # Helpers location
-HELPERS_ROOT := $(TOOLS_ROOT)/helpers
+HELPERS_ROOT := $(DEVENV_ROOT)/helpers
 
 # Helper for repo metadata
 REPO_HELPER := $(HELPERS_ROOT)/repo.py
