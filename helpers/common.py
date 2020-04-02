@@ -105,7 +105,7 @@ def get_name_and_target(args):
     if p_path == w_path:
         name = "<root>"
     else:
-        name = str(p_path.relative_to(w_path)) if w_path is not None else p_path.name
+        name = p_path.name
     target = args.target.with_suffix("").name
     return (name, target)
 
