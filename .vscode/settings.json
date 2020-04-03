@@ -10,7 +10,6 @@
         "nargs",
         "pyvenv",
         "strftime",
-        "stuffnodes",
         "sysdeps",
         "venv"
     ]

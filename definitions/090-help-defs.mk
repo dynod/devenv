@@ -5,7 +5,7 @@ HELP_ROOT := $(DEVENV_ROOT)/doc
 HELP_PAGES := $(wildcard $(HELP_ROOT)/*.md)
 
 # URL root
-HELP_URL_ROOT := https://github.com/stuffnodes/tools/blob/master
+HELP_URL_ROOT := https://github.com/dynod/devenv/blob/master
 HELP_DISPLAY := xdg-open
 
 # Help rules list + some tweak
