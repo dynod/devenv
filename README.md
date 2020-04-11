@@ -19,6 +19,12 @@ fetching, dependencies resolution, etc...).
 
 See [related page](./doc/setup.md) or **`make help-setup`**
 
+## Builds
+
+Make targets are provided to handle build tasks.
+
+See [related page](./doc/build.md) or **`make help-build`**
+
 ## Tests
 
 Software tests are also handled through make targets.

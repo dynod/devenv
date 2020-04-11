@@ -10,6 +10,7 @@ from pathlib import Path
 # Language names
 class Language(Enum):
     PYTHON = "python"
+    DOCKER = "docker"
 
 
 # Icon names
@@ -31,11 +32,12 @@ class Icon(Enum):
     CROSS_FINGER = "cross_finger"
     EYE = "eye"
     SNAKE = "snake"
+    WHALE = "whale"
 
 
 # Map icons enum to real icons
 ICONS = {
-    Icon.BUILD: "\U0001F6E0",
+    Icon.BUILD: "\U0001F6E0 ",
     Icon.CLEAN: "\U0001F9F9",
     Icon.TARGET: "\U0001F3AF",
     Icon.FOLDER: "\U0001F4C2",
@@ -52,6 +54,7 @@ ICONS = {
     Icon.CROSS_FINGER: "\U0001F91E",
     Icon.EYE: "\U0001F441 ",
     Icon.SNAKE: "\U0001F40D",
+    Icon.WHALE: "\U0001F433",
 }
 
 
@@ -76,7 +79,7 @@ class Styles:
 LVL_STYLES = {Level.INFO: Styles.RESET, Level.WARNING: Styles.YELLOW, Level.ERROR: Styles.RED}
 
 # Map languages to icons
-LANG_ICONS = {Language.PYTHON: Icon.SNAKE}
+LANG_ICONS = {Language.PYTHON: Icon.SNAKE, Language.DOCKER: Icon.WHALE}
 
 
 # Get current timestamp string
