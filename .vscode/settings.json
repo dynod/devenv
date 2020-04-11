@@ -10,6 +10,7 @@
         "Makefiles",
         "XDIST",
         "chdir",
+        "chmod",
         "datefmt",
         "devenv",
         "dynod",

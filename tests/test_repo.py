@@ -128,7 +128,7 @@ class RepoHelperSharedTests(TestRepoHelper):
 
     def test_url(self):
         # Test url command
-        assert self.call_repo(["-u"]) == "git@github.com:dynod/devenv"
+        assert self.call_repo(["-u"]) in ["git@github.com:dynod/devenv", "https://github.com/dynod/devenv"]
 
     def test_manifest(self):
         # Test manifest command

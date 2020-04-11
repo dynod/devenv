@@ -1,9 +1,10 @@
 # Common test class with miscellaneous utilities and fixtures
-import pytest
-import shutil
 import logging
 import os
+import shutil
 from pathlib import Path
+
+import pytest
 
 
 @pytest.mark.usefixtures("logs")
@@ -66,3 +67,4 @@ class TestUtils:
 
         # Move folder
         shutil.move(self.test_folder, self.__test_final_folder)
+        self.test_folder.parent.rmdir()
