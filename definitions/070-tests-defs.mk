@@ -16,7 +16,7 @@ FLAKE_REPORT := $(FLAKE_ROOT)/index.html
 
 # Tests report
 TEST_ROOT := $(OUTPUT_ROOT)/tests
-TEST_REPORT := $(OUTPUT_ROOT)/tests.xml
+TEST_REPORT := $(TEST_ROOT)/report.xml
 
 # Time file for incremental tests behavior
 TEST_TIME := $(CACHE_DIR)/tests.time
