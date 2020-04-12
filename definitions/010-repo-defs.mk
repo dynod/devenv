@@ -9,6 +9,7 @@ REPO := $(REPO_ROOT)/repo/repo
 REPO_URL := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
 REPO_MANIFEST := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --manifest)
 REPO_GROUPS := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --groups)
+REPO_CHECKOUT_CMD := $(REPO_HELPER) -r $(REPO_ROOT) --checkout
 
 # All in one setup rules
 SETUP_RULES := $(foreach GROUP,$(REPO_GROUPS),setup-$(GROUP))
@@ -24,6 +25,19 @@ PROJECTS := $(foreach P,$(shell cat $(REPO_ROOT)/project.list),$(WORKSPACE_ROOT)
 
 # Cache dir will be in the repo root
 CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
+
+# Check for branched manifest
+ifdef MANIFEST_BRANCHES
+
+# Generate branch manifest
+BRANCH_MANIFEST_BUILD := $(FILE_STATUS) -s "Generating branch manifest" $(REPO_HELPER) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
+SYNC_OPTIONS := --no-manifest-update
+
+else # MANIFEST_BRANCHES
+
+BRANCH_MANIFEST_BUILD := true
+
+endif # MANIFEST_BRANCHES
 
 else # !WORKSPACE_ROOT
 
