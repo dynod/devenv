@@ -9,6 +9,7 @@
         "DEPS",
         "Makefiles",
         "XDIST",
+        "chdir",
         "datefmt",
         "devenv",
         "dynod",
@@ -20,6 +21,7 @@
         "pyvenv",
         "strftime",
         "sysdeps",
+        "toxml",
         "venv"
     ]
 }

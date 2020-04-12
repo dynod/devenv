@@ -30,11 +30,19 @@ setup process for the current project set (except the group selection).
 This target handle the necessary **`repo init`** command to initialize the 
 workspace with the chosen project set (group)
 
+Additionally, if some specific branches are requested to be checked out instead of
+the master one, the **MANIFEST_BRANCHES** variable can be set. It has to be a space
+separated list of *name/branch* couples, where:
+* **name** is the project name (as referenced in the master manifest)
+* **branch** is the branch to be checked out for that project
+
 ## Source code synchronization - "sync"
 
 This target handle the necessary **`repo sync`** command to trigger source 
 code synchronization.
-It also prepare local branch for all projects in the workspace.
+It also prepare local branch for all projects in the workspace:
+* either the **master** one if default manifest is used
+* or specific ones if the **MANIFEST_BRANCHES** is set (see above)
 
 ## Prepare development environment
 
