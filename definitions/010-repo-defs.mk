@@ -30,7 +30,7 @@ CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
 ifdef MANIFEST_BRANCHES
 
 # Generate branch manifest
-BRANCH_MANIFEST_BUILD := $(FILE_STATUS) -s "Generating branch manifest" $(REPO_HELPER) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
+BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" $(REPO_HELPER) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
 SYNC_OPTIONS := --no-manifest-update
 
 else # MANIFEST_BRANCHES
