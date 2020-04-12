@@ -97,7 +97,7 @@ class RepoHandler:
 
     def checkout_project(self, args: Namespace):
         # Guess project path from PWD + repo root
-        relative_project_path = Path(os.getcwd()).relative_to(self.repo_root.parent).as_posix()
+        relative_project_path = Path(os.getcwd()).relative_to(self.repo_root.resolve().parent).as_posix()
         matching_projects = list(filter(lambda p: self.project_path(p) == relative_project_path, self.projects))
         if len(matching_projects) == 1:
             branch = self.project_branch(matching_projects[0])
