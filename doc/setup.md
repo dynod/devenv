@@ -36,6 +36,9 @@ separated list of *name/branch* couples, where:
 * **name** is the project name (as referenced in the master manifest)
 * **branch** is the branch to be checked out for that project
 
+Note that once switched in branch mode, any further **`make setup-xxx`** or **`make init-xxx`** will stick 
+to the switched branch. To get back to the original master manifest, just set the **MANIFEST_RESET** variable.
+
 ## Source code synchronization - "sync"
 
 This target handle the necessary **`repo sync`** command to trigger source 

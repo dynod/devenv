@@ -5,11 +5,21 @@ ifdef WORKSPACE_ROOT
 REPO_ROOT := $(WORKSPACE_ROOT)/.repo
 REPO := $(REPO_ROOT)/repo/repo
 
+# Cache dir will be in the repo root
+CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
+
+# Cache for original manifest name
+ORIGINAL_MANIFEST := $(CACHE_DIR)/original.manifest
+
 # Repo metadata
 REPO_URL := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
-REPO_MANIFEST := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --manifest)
 REPO_GROUPS := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --groups)
 REPO_CHECKOUT_CMD := $(REPO_HELPER) -r $(REPO_ROOT) --checkout
+ifdef MANIFEST_RESET
+REPO_MANIFEST := $(shell if test -e $(ORIGINAL_MANIFEST); then cat $(ORIGINAL_MANIFEST); else echo "manifest.xml"; fi)
+else
+REPO_MANIFEST := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --manifest)
+endif
 
 # All in one setup rules
 SETUP_RULES := $(foreach GROUP,$(REPO_GROUPS),setup-$(GROUP))
@@ -23,11 +33,11 @@ GROUP_FROM_RULE = $(shell echo $@ | cut -d - -f 2)
 # Projects
 PROJECTS := $(foreach P,$(shell cat $(REPO_ROOT)/project.list),$(WORKSPACE_ROOT)/$(P))
 
-# Cache dir will be in the repo root
-CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
-
 # Check for branched manifest
 ifdef MANIFEST_BRANCHES
+
+# Persist original manifest
+ORIGINAL_MANIFEST_STATUS := $(shell if test ! -e $(ORIGINAL_MANIFEST); then echo $(REPO_MANIFEST) > $(ORIGINAL_MANIFEST); fi)
 
 # Generate branch manifest
 BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" $(REPO_HELPER) -r $(REPO_ROOT) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
