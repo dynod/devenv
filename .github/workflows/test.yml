@@ -1,5 +1,5 @@
 # Test workflow
-name: Test
+name: Tests
 on: push
 jobs:
     test_job:
