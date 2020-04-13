@@ -1,5 +1,7 @@
 # A reusable set of development and build tools
 
+![Tests](https://github.com/dynod/devenv/workflows/Tests/badge.svg)
+
 This set of tools is essentially based on Makefiles, providing rules to cover
 usual needs of software development, build and testing.
 
