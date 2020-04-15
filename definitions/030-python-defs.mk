@@ -12,15 +12,15 @@ ifdef PROJECT_ROOT
 # Python project settings files
 PYTHON_PROJECT_SETTINGS := $(PROJECT_ROOT)/$(PYTHON_SETTINGS)
 
+# Python source files
+PYTHON_SRC_FILES := $(shell find $(SRC_FOLDER) -name *.py 2>/dev/null)
+
 # Is Python project?
-ifneq ("$(wildcard $(PYTHON_PROJECT_SETTINGS))","")
+ifneq ($(PYTHON_SRC_FILES),)
 IS_PYTHON_PROJECT := 1
 
-# Configure source folder
-SRC_FOLDER ?= src/
-
 # All Python source files
-SRC_FILES := $(shell find $(SRC_FOLDER) -name *.py)
+SRC_FILES := $(PYTHON_SRC_FILES)
 
 # Setup file
 PYTHON_SETUP := $(PROJECT_ROOT)/setup.cfg

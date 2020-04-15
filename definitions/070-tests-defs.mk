@@ -8,7 +8,7 @@ ifdef IS_PYTHON_PROJECT
 TEST_FOLDER ?= tests/
 
 # All Python test files
-TEST_FILES := $(shell find $(TEST_FOLDER) -name *.py)
+TEST_FILES := $(shell find $(TEST_FOLDER) -name *.py 2>/dev/null)
 
 # Flake8 report
 FLAKE_ROOT := $(OUTPUT_ROOT)/flake-report
