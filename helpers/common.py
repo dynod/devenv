@@ -34,6 +34,7 @@ class Icon(Enum):
     SNAKE = "snake"
     WHALE = "whale"
     FILE = "file"
+    LIPSTICK = "lipstick"
 
 
 # Map icons enum to real icons
@@ -57,6 +58,7 @@ ICONS = {
     Icon.SNAKE: "\U0001F40D",
     Icon.WHALE: "\U0001F433",
     Icon.FILE: "\U0001F4DD",
+    Icon.LIPSTICK: "\U0001F484",
 }
 
 
