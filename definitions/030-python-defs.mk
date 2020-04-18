@@ -28,6 +28,14 @@ PYTHON_SETUP := $(PROJECT_ROOT)/setup.cfg
 # Code format command
 PYTHON_CODE_FORMAT_CMD = $(IN_PYTHON_VENV) $(LIPSTICK_STATUS) --lang python -s "Format code" black --line-length 160
 
+# Python artifacts
+PYTHON_ARTIFACTS ?= $(ARTIFACTS_ROOT)/python
+
+# Python distribution
+ifdef PYTHON_PACKAGE
+PYTHON_DISTRIBUTION := $(PYTHON_ARTIFACTS)/$(PYTHON_PACKAGE)-$(VERSION).tar.gz
+endif
+
 # If code generation required?
 ifdef IS_CODEGEN_PROJECT
 
@@ -45,6 +53,9 @@ PYTHON_GEN_FILES := \
 	$(PYTHON_GEN_INIT)
 
 endif # IS_CODEGEN_PROJECT
+
+# Code format time stamp
+CODEFORMAT_TIME := $(CACHE_DIR)/codeformat.time
 
 endif # IS_PYTHON_PROJECT
 

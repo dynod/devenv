@@ -12,7 +12,6 @@ $(PYTHON_GEN_FOLDER)/%_pb2.py: $(PROTO_FOLDER)/%.proto
 	mkdir -p $(PYTHON_GEN_FOLDER)
 	$(IN_PYTHON_VENV) $(FILE_STATUS) -t codegen --lang python -s "Generate code from `basename $<`" \
 		python3 -m grpc_tools.protoc --proto_path $(PROTO_FOLDER) --python_out $(PYTHON_GEN_FOLDER) --grpc_python_out $(PYTHON_GEN_FOLDER) $<
-	$(PYTHON_CODE_FORMAT_CMD) -t codegen `echo $@ | sed -e "s/.py$$//"`*.py
 
 # For package init
 $(PYTHON_GEN_INIT):
