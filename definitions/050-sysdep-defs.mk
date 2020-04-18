@@ -10,7 +10,7 @@ ALL_SYSTEM_SETTINGS := $(foreach P,$(PROJECTS),$(P)/$(SYSTEM_SETTINGS))
 SYSDEP_DATABASE := $(shell find $(ALL_SYSTEM_SETTINGS) -name sysdeps.json 2> /dev/null)
 
 # All system requirements
-SYSDEP_REQUIREMENTS := $(shell find $(ALL_SYSTEM_SETTINGS) -name *.txt 2> /dev/null)
+SYSDEP_REQUIREMENTS := $(shell find $(ALL_SYSTEM_SETTINGS) -name '*.txt' 2> /dev/null)
 
 # System install log
 SYS_INSTALL_LOG := /var/log/dpkg.log

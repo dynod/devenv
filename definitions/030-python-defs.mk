@@ -13,7 +13,7 @@ ifdef PROJECT_ROOT
 PYTHON_PROJECT_SETTINGS := $(PROJECT_ROOT)/$(PYTHON_SETTINGS)
 
 # Python source files
-PYTHON_SRC_FILES := $(shell find $(SRC_FOLDER) -name *.py 2>/dev/null)
+PYTHON_SRC_FILES := $(shell find $(SRC_FOLDER) -name '*.py' 2>/dev/null)
 
 # Is Python project?
 ifneq ($(PYTHON_SRC_FILES),)

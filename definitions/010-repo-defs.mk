@@ -1,5 +1,4 @@
-# Repo definitions -- only works with full workspace
-ifdef WORKSPACE_ROOT
+# Repo definitions
 
 # Repo root and tool
 REPO_ROOT := $(WORKSPACE_ROOT)/.repo
@@ -49,12 +48,16 @@ BRANCH_MANIFEST_BUILD := true
 
 endif # MANIFEST_BRANCHES
 
-else # !WORKSPACE_ROOT
+ifdef PROJECT_ROOT
 
-# Projects
-PROJECTS := $(PROJECT_ROOT) $(DEVENV_ROOT)
+# Set project name
+PROJECT_NAME := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --name)
 
-# Cache dir will be in the project git dir
-CACHE_DIR := $(shell mkdir -p $(PROJECT_ROOT)/.git/.cache && echo $(PROJECT_ROOT)/.git/.cache)
+endif # !PROJECT_ROOT
 
-endif # !WORKSPACE_ROOT
+ifdef CI
+
+# In CI, clone with depth 1
+REPO_INIT_OPTIONS = --depth=1
+
+endif # CI
