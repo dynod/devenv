@@ -4,15 +4,8 @@
 ifdef IS_PYTHON_PROJECT
 
 # Add test target
-.PHONY: tests flake8
-tests: $(FLAKE_REPORT) $(TEST_REPORT)
-flake8: $(FLAKE_REPORT)
-
-# Static analysis with flake8
-$(FLAKE_REPORT): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(TEST_FILES)
-	rm -Rf $(FLAKE_ROOT)
-	mkdir -p $(FLAKE_ROOT)
-	$(IN_PYTHON_VENV) $(EYE_STATUS) -t flake8 --lang python -s "Analyzing Python code" flake8 $(SRC_FOLDER) $(TEST_FOLDER)
+.PHONY: tests
+tests: build $(TEST_REPORT)
 
 # Real tests run
 $(TEST_REPORT): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(TEST_FILES) $(TEST_TIME)
