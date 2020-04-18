@@ -120,6 +120,14 @@ class TestRepoHelperMisc(TestRepoHelper):
         # "tools" project checkout
         self.check_checkout(cd_project_tools, "fake", monkeypatch)
 
+    def test_project_name_ok(self, cd_project_tools):
+        # Verify name in normal project
+        assert self.call_repo(["-n"]) == "tools"
+
+    def test_project_name_unknown(self, cd_project_unknown):
+        # Verify name in unknown project
+        assert self.call_repo(["-n"]) == ""
+
 
 class RepoHelperSharedTests(TestRepoHelper):
     def test_groups(self):

@@ -8,14 +8,10 @@ REPO_HELPER := $(HELPERS_ROOT)/repo.py
 STATUS_HELPER := $(HELPERS_ROOT)/status.py
 
 # Status macros
-ifdef WORKSPACE_ROOT
 ifdef PROJECT_ROOT
 HELPER_OPTS = -w $(WORKSPACE_ROOT) -p $(PROJECT_ROOT) -t $@
 else # !PROJECT_ROOT
 HELPER_OPTS = -w $(WORKSPACE_ROOT) -p $(WORKSPACE_ROOT) -t $@
-endif
-else # !WORKSPACE_ROOT
-HELPER_OPTS = -p $(PROJECT_ROOT) -t $@
 endif
 
 # If make sub-process, don't clean logs
@@ -68,3 +64,6 @@ endif
 ifdef SYSDEPS_REINSTALL
 SYSDEPS_HELPER += --reinstall
 endif
+
+# CPU count (for tools unable to detect it)
+CPU_COUNT = $(shell grep processor /proc/cpuinfo | wc -l)

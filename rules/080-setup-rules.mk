@@ -1,18 +1,17 @@
-# Some rules for repo related stuff -- only works with full workspace
-ifdef WORKSPACE_ROOT
+# Some rules for repo related stuff
 
 # Repo init/sync rules
 .PHONY: $(INIT_RULES) sync
 
 $(INIT_RULES):
 	# Init (for expected group, if any)
-	$(SETUP_STATUS) -s "Initialize repo for $(GROUP_FROM_RULE) projects set" $(REPO) init -u $(REPO_URL) -m $(REPO_MANIFEST) -g default,$(GROUP_FROM_RULE)
+	$(SETUP_STATUS) -s "Initialize repo for $(GROUP_FROM_RULE) projects set" $(REPO) init -u $(REPO_URL) -m $(REPO_MANIFEST) -g default,$(GROUP_FROM_RULE) $(REPO_INIT_OPTIONS)
 	# Generate branch manifest if needed
 	$(BRANCH_MANIFEST_BUILD)
 
 sync:
 	# Sync + create local branch
-	$(SYNC_STATUS) -s "Synchronize repo" $(REPO) sync $(SYNC_OPTIONS)
+	$(SYNC_STATUS) -s "Synchronize repo" $(REPO) sync -j $(CPU_COUNT) $(SYNC_OPTIONS)
 	$(BRANCH_STATUS) -s "Create local branches" $(REPO) forall -c $(REPO_CHECKOUT_CMD)
 
 # All in one setup rules (= init + setup)
@@ -27,5 +26,3 @@ $(SETUP_RULES):
 # - check system dependencies
 # - prepare Python Virtual env (if any)
 setup: sync sysdeps $(PYTHON_VENV)
-
-endif # WORKSPACE_ROOT

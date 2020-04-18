@@ -72,6 +72,22 @@ class RepoHandler:
         # Get manifest relative path
         return self.manifest_path.relative_to(self.manifests_root).as_posix()
 
+    def print_name(self, args: Namespace):
+        # Get projects matching with current path
+        matching_projects = self.matching_projects
+        if len(matching_projects) == 1:
+            return self.project_name(matching_projects[0])
+        return ""
+
+    @property
+    def relative_project_path(self) -> str:
+        return Path(os.getcwd()).relative_to(self.repo_root.resolve().parent).as_posix()
+
+    @property
+    def matching_projects(self) -> list:
+        relative_project_path = self.relative_project_path
+        return list(filter(lambda p: self.project_path(p) == relative_project_path, self.projects))
+
     def generate_branch_manifest(self, args: Namespace):
         # Build branch manifest
 
@@ -98,8 +114,8 @@ class RepoHandler:
 
     def checkout_project(self, args: Namespace):
         # Guess project path from PWD + repo root
-        relative_project_path = Path(os.getcwd()).relative_to(self.repo_root.resolve().parent).as_posix()
-        matching_projects = list(filter(lambda p: self.project_path(p) == relative_project_path, self.projects))
+        relative_project_path = self.relative_project_path
+        matching_projects = self.matching_projects
         if len(matching_projects) == 1:
             branch = self.project_branch(matching_projects[0])
         else:
@@ -120,6 +136,7 @@ def main(args):
     actions = parser.add_mutually_exclusive_group()
     actions.add_argument("-g", "--groups", action="store_true", help="Display manifest available groups list")
     actions.add_argument("-u", "--url", action="store_true", help="Display manifest repository remote URL")
+    actions.add_argument("-n", "--name", action="store_true", help="Display project name on repository")
     actions.add_argument("-m", "--manifest", action="store_true", help="Display current manifest relative path")
     actions.add_argument("-b", "--branch-manifest", action="store_true", help="Generate a branch manifest for required project/branch (--branch)")
     actions.add_argument("-c", "--checkout", action="store_true", help="Checkout current project branch")
@@ -134,6 +151,7 @@ def main(args):
     actions[args.groups] = repo_root.print_groups
     actions[args.url] = repo_root.print_url
     actions[args.manifest] = repo_root.print_manifest
+    actions[args.name] = repo_root.print_name
     actions[args.branch_manifest] = repo_root.generate_branch_manifest
     actions[args.checkout] = repo_root.checkout_project
     if True in actions:
