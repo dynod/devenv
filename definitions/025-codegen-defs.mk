@@ -4,7 +4,7 @@
 PROTO_FOLDER ?= $(PROJECT_ROOT)/protos
 
 # API files
-PROTO_FILES := $(shell find $(PROTO_FOLDER) -name *.proto)
+PROTO_FILES := $(shell find $(PROTO_FOLDER) -name *.proto 2>/dev/null)
 
 # Is code generation supported?
 ifneq ($(PROTO_FILES),)

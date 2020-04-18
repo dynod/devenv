@@ -81,6 +81,7 @@ class RepoHandler:
             for manifest_project in filter(lambda p: self.project_name(p) == project, self.projects):
                 # Update branch
                 manifest_project.attributes["dest-branch"] = branch
+                manifest_project.attributes["revision"] = f"refs/heads/{branch}"
 
         # Serialize updated manifest
         branch_manifest = self.manifest_path.parent / "branch.xml"
