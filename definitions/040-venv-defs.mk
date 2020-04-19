@@ -7,12 +7,18 @@ PYTHON_VENV := venv
 ifdef IS_PYTHON_PROJECT
 
 # Python binary that will be used to setup the virtual environment
-PYTHON_FOR_VENV ?= python3
+PYTHON_FOR_VENV ?= python3.6
 
 # List project requirements files + shared ones
 PYTHON_VENV_REQUIREMENTS := $(shell find $(ALL_PYTHON_SHARED_SETTINGS) $(PYTHON_PROJECT_SETTINGS) -maxdepth 1 -name '*.txt' 2> /dev/null)
 
 # Run command in venv
 IN_PYTHON_VENV := source $(PYTHON_VENV)/bin/activate && 
+
+# Python distribution?
+ifdef PYTHON_DISTRIBUTION
+# Local venv install
+PYTHON_DISTRIBUTION_INSTALL := $(PYTHON_VENV)/lib/$(PYTHON_FOR_VENV)/site-packages/$(shell echo $(PYTHON_PACKAGE) | sed -e 's/-/_/g')-$(VERSION).egg-info
+endif
 
 endif # IS_PYTHON_PROJECT
