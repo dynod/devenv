@@ -14,11 +14,15 @@ TEST_FILES := $(shell find $(TEST_FOLDER) -name '*.py' 2>/dev/null)
 FLAKE_ROOT := $(OUTPUT_ROOT)/flake-report
 FLAKE_REPORT := $(FLAKE_ROOT)/index.html
 
+# Something to test
+ifneq ($(TEST_FILES),)
+
 # Tests report
 TEST_ROOT := $(OUTPUT_ROOT)/tests
 TEST_REPORT := $(TEST_ROOT)/report.xml
 
 # Time file for incremental tests behavior
 TEST_TIME := $(CACHE_DIR)/tests.time
+endif # TEST_FILES
 
 endif # IS_PYTHON_PROJECT

@@ -51,6 +51,7 @@ CROSS_FINGER_STATUS = $(STATUS) -i cross_finger
 EYE_STATUS = $(STATUS) -i eye
 FILE_STATUS = $(STATUS) -i file
 LIPSTICK_STATUS = $(STATUS) -i lipstick
+INSTALL_STATUS = $(STATUS) -i install
 
 # Helper for system dependencies
 SYSDEPS_HELPER = $(HELPERS_ROOT)/sysdeps.py $(HELPER_OPTS)

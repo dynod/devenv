@@ -36,6 +36,15 @@ $(PYTHON_DISTRIBUTION): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(PYTHON_GEN
 	rm -Rf $(PYTHON_ARTIFACTS)
 	$(IN_PYTHON_VENV) $(BUILD_STATUS) --lang python -s "Build Python distribution" -t dist ./setup.py sdist --dist-dir $(PYTHON_ARTIFACTS)
 
+.PHONY: install
+install: $(PYTHON_DISTRIBUTION_INSTALL)
+build: install
+
+# Distribution venv install
+$(PYTHON_DISTRIBUTION_INSTALL): $(PYTHON_DISTRIBUTION)
+	$(IN_PYTHON_VENV)  $(INSTALL_STATUS) --lang python -s "Install Python distribution" -t install pip install $(PYTHON_DISTRIBUTION)
+	touch $@
+
 endif # PYTHON_DISTRIBUTION
 
 endif # IS_PYTHON_PROJECT
