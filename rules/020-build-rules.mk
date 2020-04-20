@@ -12,7 +12,7 @@ build: codeformat
 
 # Format Python code
 $(CODEFORMAT_TIME): $(PYTHON_VENV) $(SRC_FILES) $(TEST_FILES) $(PYTHON_GEN_FILES)
-	$(IN_PYTHON_VENV) $(LIPSTICK_STATUS) --lang python -s "Format code" black --line-length 160 $?
+	$(IN_PYTHON_VENV) $(LIPSTICK_STATUS) --lang python -s "Format code" black --line-length 160 $(SRC_FILES) $(TEST_FILES) $(PYTHON_GEN_FILES)
 	touch $(CODEFORMAT_TIME)
 
 .PHONY: flake8
