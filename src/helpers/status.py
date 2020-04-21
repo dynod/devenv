@@ -3,8 +3,14 @@
 # Helper script for status printing
 import sys
 from argparse import ArgumentParser
+from pathlib import Path
 
-from common import Icon, Language, Level, add_common_args, capture_cmd, get_name_and_target, get_stamp, pretty_print
+if __name__ == "__main__":  # pragma: no cover
+    # Hack for standalone invocation
+    SRC = Path(__file__).parent.parent
+    sys.path.insert(0, str(SRC))
+
+from helpers.common import Icon, Language, Level, add_common_args, capture_cmd, get_name_and_target, get_stamp, pretty_print  # noqa: E402 isort:skip
 
 
 def main(args: list) -> int:
@@ -15,7 +21,8 @@ def main(args: list) -> int:
     parser.add_argument("-l", "--level", type=Level, default=Level.INFO, help="Color level")
     parser.add_argument("-i", "--icon", type=Icon, required=True, help="Displayed emoji")
     parser.add_argument("--lang", type=Language, default=None, help="Language (if applicable)")
-    args, cmd = parser.parse_known_args(args)
+    parser.add_argument("cmd", nargs="*", help="Command to be executed")
+    args = parser.parse_args(args)
 
     # Reckon project name and target
     name, target = get_name_and_target(args)
@@ -27,8 +34,8 @@ def main(args: list) -> int:
     pretty_print(stamp, args.icon, name, target, args.level, args.status, language=args.lang)
 
     # Is there something to run?
-    if len(cmd) > 0:
-        return capture_cmd(args, cmd, stamp)
+    if len(args.cmd) > 0:
+        return capture_cmd(args, args.cmd, stamp)
     return 0
 
 

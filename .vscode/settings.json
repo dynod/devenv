@@ -1,8 +1,7 @@
 {
     "python.pythonPath": "venv/bin/python",
     "python.autoComplete.extraPaths": [
-        "helpers",
-        "tests"
+        "src"
     ],
     "python.testing.pytestEnabled": true,
     "cSpell.words": [
@@ -17,6 +16,7 @@
         "isort",
         "msecs",
         "nargs",
+        "noqa",
         "noreqs",
         "pytest",
         "pyvenv",

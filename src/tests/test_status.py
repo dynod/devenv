@@ -1,8 +1,8 @@
 # Tests for repo helper
 import logging
 
-from test_shared import TestHelpers  # isort:skip
-from status import main, Level, Language, Icon  # isort:skip
+from helpers.status import Icon, Language, Level, main
+from tests.test_shared import TestHelpers
 
 
 class TestStatusHelper(TestHelpers):

@@ -52,6 +52,7 @@ EYE_STATUS = $(STATUS) -i eye
 FILE_STATUS = $(STATUS) -i file
 LIPSTICK_STATUS = $(STATUS) -i lipstick
 INSTALL_STATUS = $(STATUS) -i install
+TOOLBOX_STATUS = $(STATUS) -i toolbox
 
 # Helper for system dependencies
 SYSDEPS_HELPER = $(HELPERS_ROOT)/sysdeps.py $(HELPER_OPTS)
@@ -65,6 +66,9 @@ endif
 ifdef SYSDEPS_REINSTALL
 SYSDEPS_HELPER += --reinstall
 endif
+
+# Helper for settings builder
+SETTINGS_BUILDER := $(HELPERS_ROOT)/settings_builder.py
 
 # CPU count (for tools unable to detect it)
 CPU_COUNT = $(shell grep processor /proc/cpuinfo | wc -l)

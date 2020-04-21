@@ -4,8 +4,8 @@ import logging
 import shutil
 import subprocess
 
-from test_shared import TestHelpers  # isort:skip
-from sysdeps import main  # isort:skip
+from helpers.sysdeps import main
+from tests.test_shared import TestHelpers
 
 
 class TestStatusHelper(TestHelpers):

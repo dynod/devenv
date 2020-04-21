@@ -12,7 +12,7 @@ build: codeformat
 
 # Format Python code
 $(CODEFORMAT_TIME): $(PYTHON_VENV) $(SRC_FILES) $(TEST_FILES) $(PYTHON_GEN_FILES)
-	$(IN_PYTHON_VENV) $(LIPSTICK_STATUS) --lang python -s "Format code" black --line-length 160 $(SRC_FILES) $(TEST_FILES) $(PYTHON_GEN_FILES)
+	$(PYTHON_CODE_FORMAT_CMD) $(SRC_FILES) $(TEST_FILES) $(PYTHON_GEN_FILES)
 	touch $(CODEFORMAT_TIME)
 
 .PHONY: flake8
@@ -23,7 +23,7 @@ build: flake8
 $(FLAKE_REPORT): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(TEST_FILES)
 	rm -Rf $(FLAKE_ROOT)
 	mkdir -p $(FLAKE_ROOT)
-	$(IN_PYTHON_VENV) $(EYE_STATUS) -t flake8 --lang python -s "Analyzing Python code" flake8 $(SRC_FOLDER) $(TEST_FOLDER)
+	$(IN_PYTHON_VENV) $(EYE_STATUS) -t flake8 --lang python -s "Analyze Python code" -- flake8 $(SRC_FOLDER) $(TEST_FOLDER)
 
 ifdef PYTHON_DISTRIBUTION
 
@@ -32,18 +32,14 @@ dist: $(PYTHON_DISTRIBUTION)
 build: dist
 
 # Build distribution
-$(PYTHON_DISTRIBUTION): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(PYTHON_GEN_FILES)
+$(PYTHON_DISTRIBUTION): $(PYTHON_VENV) $(PYTHON_SETUP) $(PYTHON_SETUP_EXE) $(SRC_FILES) $(PYTHON_GEN_FILES)
 	rm -Rf $(PYTHON_ARTIFACTS)
-	$(IN_PYTHON_VENV) $(BUILD_STATUS) --lang python -s "Build Python distribution" -t dist ./setup.py sdist --dist-dir $(PYTHON_ARTIFACTS)
+	$(IN_PYTHON_VENV) $(BUILD_STATUS) --lang python -s "Build Python distribution" -t dist -- $(PYTHON_SETUP_EXE) sdist --dist-dir $(PYTHON_ARTIFACTS)
 
-.PHONY: install
-install: $(PYTHON_DISTRIBUTION_INSTALL)
-build: install
-
-# Distribution venv install
-$(PYTHON_DISTRIBUTION_INSTALL): $(PYTHON_DISTRIBUTION)
-	$(IN_PYTHON_VENV)  $(INSTALL_STATUS) --lang python -s "Install Python distribution" -t install pip install $(PYTHON_DISTRIBUTION)
-	touch $@
+# Python executable file
+$(PYTHON_SETUP_EXE): $(PYTHON_SETUP_TEMPLATE)
+	cp $(PYTHON_SETUP_TEMPLATE) $(PYTHON_SETUP_EXE)
+	chmod +x $(PYTHON_SETUP_EXE)
 
 endif # PYTHON_DISTRIBUTION
 

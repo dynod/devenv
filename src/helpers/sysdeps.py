@@ -11,7 +11,12 @@ from argparse import ONE_OR_MORE, ArgumentParser, Namespace
 from pathlib import Path
 from typing import List, Set
 
-from common import Icon, Level, add_common_args, capture_cmd, get_name_and_target, get_stamp, pretty_print, prompt_user
+if __name__ == "__main__":  # pragma: no cover
+    # Hack for standalone invocation
+    SRC = Path(__file__).parent.parent
+    sys.path.insert(0, str(SRC))
+
+from helpers.common import Icon, Level, add_common_args, capture_cmd, get_name_and_target, get_stamp, pretty_print, prompt_user  # noqa: E402 isort:skip
 
 
 class Resolver(ABC):
