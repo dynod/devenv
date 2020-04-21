@@ -17,7 +17,7 @@ Report is generated in **out/flake-report** folder. This can be changed by overr
 
 The **tests** target will trigger Python tests using the **`pytest`** tool.
 
-Tests files are expected to be found in the **tests** folder. This can changed by overriding the **TEST_FOLDER** variable.
+Tests files are expected to be found in the **src/tests** folder. This can changed by overriding the **TEST_FOLDER** variable.
 
 Tests execution is performed in multi-process mode, using by default all the current host cores. Tests must be designed to be multi-process compatibles.
 

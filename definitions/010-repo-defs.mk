@@ -39,7 +39,7 @@ ifdef MANIFEST_BRANCHES
 ORIGINAL_MANIFEST_STATUS := $(shell if test ! -e $(ORIGINAL_MANIFEST); then echo $(REPO_MANIFEST) > $(ORIGINAL_MANIFEST); fi)
 
 # Generate branch manifest
-BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" $(REPO_HELPER) -r $(REPO_ROOT) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
+BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" -- $(REPO_HELPER) -r $(REPO_ROOT) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
 SYNC_OPTIONS := --no-manifest-update
 
 else # MANIFEST_BRANCHES

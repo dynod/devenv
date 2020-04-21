@@ -10,9 +10,6 @@ ifneq ("$(wildcard $(CURDIR)/../../.repo)","")
 WORKSPACE_ROOT := $(CURDIR)/../..
 PROJECT_ROOT := $(CURDIR)
 
-# Some additional definition for devenv Python project
-SRC_FOLDER := helpers/
-
 endif
 endif
 DEVENV_ROOT := $(WORKSPACE_ROOT)/tools/devenv

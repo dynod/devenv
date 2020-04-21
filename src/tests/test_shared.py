@@ -1,11 +1,7 @@
 # Just a common class to define root folder
-import sys
+from tests.test_helper import Path, TestUtils
 
-from test_helper import Path, TestUtils
-
-# Hack to let pytest find the helpers
-ROOT = Path(__file__).parent.parent
-sys.path.insert(0, str(ROOT / "helpers"))
+ROOT = Path(__file__).parent.parent.parent
 
 
 class TestHelpers(TestUtils):

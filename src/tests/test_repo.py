@@ -6,8 +6,8 @@ import subprocess
 
 import pytest
 
-from test_shared import TestHelpers  # isort:skip
-from repo import main, RepoHandler  # isort:skip
+from helpers.repo import RepoHandler, main
+from tests.test_shared import TestHelpers
 
 
 class TestRepoHelper(TestHelpers):

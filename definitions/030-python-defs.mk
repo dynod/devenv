@@ -6,6 +6,9 @@ PYTHON_SETTINGS := $(DEVENV)/python
 # All Python shared settings folders
 ALL_PYTHON_SHARED_SETTINGS := $(foreach P,$(PROJECTS),$(P)/$(PYTHON_SETTINGS)/shared)
 
+# Various templates coming from devenv
+PYTHON_DEVENV_TEMPLATES := $(DEVENV_ROOT)/templates
+
 # Project specific defs
 ifdef PROJECT_ROOT
 
@@ -22,11 +25,18 @@ IS_PYTHON_PROJECT := 1
 # All Python source files
 SRC_FILES := $(PYTHON_SRC_FILES)
 
-# Setup file
+# Setup config file
 PYTHON_SETUP := $(PROJECT_ROOT)/setup.cfg
 
+# Need at least basic settings (flake8, isort, ...) in setup
+PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup.cfg
+
+# Setup executable file (+template)
+PYTHON_SETUP_EXE := $(PROJECT_ROOT)/setup.py
+PYTHON_SETUP_TEMPLATE := $(PYTHON_DEVENV_TEMPLATES)/setup.py
+
 # Code format command
-PYTHON_CODE_FORMAT_CMD = $(IN_PYTHON_VENV) $(LIPSTICK_STATUS) --lang python -s "Format code" black --line-length 160
+PYTHON_CODE_FORMAT_CMD = $(IN_PYTHON_VENV) $(LIPSTICK_STATUS) --lang python -s "Format code" -- black --line-length 160
 
 # Python artifacts
 PYTHON_ARTIFACTS ?= $(ARTIFACTS_ROOT)/python
@@ -34,6 +44,10 @@ PYTHON_ARTIFACTS ?= $(ARTIFACTS_ROOT)/python
 # Python distribution
 ifdef PYTHON_PACKAGE
 PYTHON_DISTRIBUTION := $(PYTHON_ARTIFACTS)/$(PYTHON_PACKAGE)-$(VERSION).tar.gz
+
+# Add some other stuff to setup.cfg
+PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-build.cfg
+
 endif
 
 # If code generation required?
