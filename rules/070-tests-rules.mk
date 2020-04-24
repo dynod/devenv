@@ -13,7 +13,7 @@ tests: build $(TEST_REPORT)
 # Real tests run
 $(TEST_REPORT): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(TEST_FILES) $(TEST_TIME)
 	rm -Rf $(TEST_ROOT)
-	$(CROSS_FINGER_STATUS) -t pytest --lang python -s "Running Python tests"
+	$(CROSS_FINGER_STATUS) -t pytest --lang python -s "Run Python tests"
 	$(IN_PYTHON_VENV) $(HELPERS_ROOT)/incremental-pytest.sh $(TEST_TIME) $(TEST_REPORT)
 
 # Default rule to rebuild test stamp file

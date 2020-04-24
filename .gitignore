@@ -4,6 +4,7 @@ venv/
 # Python temporary files
 __pycache__
 *.pyc
+.pytest_cache/
 
 # All outputs
 out/
