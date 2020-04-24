@@ -20,6 +20,11 @@ ifneq ($(TEST_FILES),)
 # Add test configuration in setup
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-test.cfg
 
+ifdef IS_CODEGEN_PROJECT
+# Some stuff needs to be ignored in the settings (because in generated code)
+PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-test-codegen.cfg
+endif # IS_CODEGEN_PROJECT
+
 # Tests report
 TEST_ROOT := $(OUTPUT_ROOT)/tests
 TEST_REPORT := $(TEST_ROOT)/report.xml
