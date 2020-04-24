@@ -16,7 +16,7 @@ SYSDEP_REQUIREMENTS := $(shell find $(ALL_SYSTEM_SETTINGS) -name '*.txt' 2> /dev
 SYS_INSTALL_LOG := /var/log/dpkg.log
 
 # User install stamp (to keep timestamp of last system deps verification)
-SYSDEPS_TIME := $(CACHE_DIR)/sysdeps.time
+SYSDEPS_TIME := $(CACHE_SHARED_DIR)/sysdeps.time
 
 # Reinstall?
 ifdef SYSDEPS_REINSTALL
