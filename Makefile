@@ -2,23 +2,17 @@
 # Main makefile for dynod projects
 #
 
-# Determine workspace/project/tools root
-ifneq ("$(wildcard $(CURDIR)/.repo)","")
-WORKSPACE_ROOT := $(CURDIR)
-else
-ifneq ("$(wildcard $(CURDIR)/../../.repo)","")
 WORKSPACE_ROOT := $(CURDIR)/../..
 PROJECT_ROOT := $(CURDIR)
 
-endif
-endif
-DEVENV_ROOT := $(WORKSPACE_ROOT)/tools/devenv
+# Be backward compatible with python 3.6 for tools
+PYTHON_FOR_VENV := python3.6
 
 # Main makefile suite - defs
-include $(DEVENV_ROOT)/main.mk
+include $(WORKSPACE_ROOT)/.workspace/main.mk
 
-# Default target is help
-default: help
+# Default target is build
+default: build
 
 # Main makefile suite - rules
-include $(DEVENV_ROOT)/rules.mk
+include $(WORKSPACE_ROOT)/.workspace/rules.mk
