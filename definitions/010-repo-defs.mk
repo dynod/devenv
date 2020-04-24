@@ -4,11 +4,11 @@
 REPO_ROOT := $(WORKSPACE_ROOT)/.repo
 REPO := $(REPO_ROOT)/repo/repo
 
-# Cache dir will be in the repo root
-CACHE_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
+# Cache directories will be in the repo root
+CACHE_SHARED_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.cache)
 
 # Cache for original manifest name
-ORIGINAL_MANIFEST := $(CACHE_DIR)/original.manifest
+ORIGINAL_MANIFEST := $(CACHE_SHARED_DIR)/original.manifest
 
 # Repo metadata
 REPO_URL := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
@@ -52,6 +52,9 @@ ifdef PROJECT_ROOT
 
 # Set project name
 PROJECT_NAME := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --name)
+
+# Project cache
+CACHE_DIR := $(shell mkdir -p $(CACHE_SHARED_DIR)/$(PROJECT_NAME) && echo $(CACHE_SHARED_DIR)/$(PROJECT_NAME))
 
 endif # !PROJECT_ROOT
 
