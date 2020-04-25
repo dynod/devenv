@@ -46,8 +46,14 @@ class SettingsBuilder(ABC):
             # Replace in content
             cwd = Path(os.getcwd())
             for index in range(len(patterns)):
-                # Handle paths
                 value = values[index]
+
+                # Replace some special characters
+                value = value.replace("@CR", "\n")
+                value = value.replace("@SP", " ")
+                value = value.replace("@TB", "\t")
+
+                # Handle paths
                 p = Path(value)
                 if p.is_absolute() and cwd in p.parents:
                     value = str(p.relative_to(cwd))
