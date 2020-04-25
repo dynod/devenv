@@ -48,6 +48,12 @@ PYTHON_DISTRIBUTION := $(PYTHON_ARTIFACTS)/$(PYTHON_PACKAGE)-$(VERSION).tar.gz
 # Add some other stuff to setup.cfg
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-build.cfg
 
+# Get requirements for setup.cfg generation
+PYTHON_MAIN_REQUIREMENTS ?= $(PYTHON_PROJECT_SETTINGS)/requirements.txt
+ifneq ($(wildcard $(PYTHON_MAIN_REQUIREMENTS)),)
+PYTHON_SETUP_REQUIREMENTS := $(shell $(HELPERS_ROOT)/list_requirements.py $(PYTHON_MAIN_REQUIREMENTS))
+endif # PYTHON_MAIN_REQUIREMENTS
+
 endif
 
 # If code generation required?
