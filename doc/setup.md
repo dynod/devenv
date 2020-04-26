@@ -36,6 +36,11 @@ separated list of *name/branch* couples, where:
 * **name** is the project name (as referenced in the master manifest)
 * **branch** is the branch to be checked out for that project
 
+The same way, the **MANIFEST_TAGS** variable can be set. It has to be a space
+separated list of *name/tag* couples, where:
+* **name** is the project name (as referenced in the master manifest)
+* **tag** is the tag to be checked out for that project
+
 Note that once switched in branch mode, any further **`make setup-xxx`** or **`make init-xxx`** will stick 
 to the switched branch. To get back to the original master manifest, just set the **MANIFEST_RESET** variable.
 
