@@ -34,19 +34,26 @@ PROJECTS := $(foreach P,$(shell cat $(REPO_ROOT)/project.list),$(WORKSPACE_ROOT)
 
 # Check for branched manifest
 ifdef MANIFEST_BRANCHES
+BRANCH_MANIFEST_OPTIONS += $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
+endif
+ifdef MANIFEST_TAGS
+BRANCH_MANIFEST_OPTIONS += $(foreach B,$(MANIFEST_TAGS), --tag $(B))
+endif
+
+ifdef BRANCH_MANIFEST_OPTIONS
 
 # Persist original manifest
 ORIGINAL_MANIFEST_STATUS := $(shell if test ! -e $(ORIGINAL_MANIFEST); then echo $(REPO_MANIFEST) > $(ORIGINAL_MANIFEST); fi)
 
 # Generate branch manifest
-BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" -- $(REPO_HELPER) -r $(REPO_ROOT) -b $(foreach B,$(MANIFEST_BRANCHES), --branch $(B))
+BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" -- $(REPO_HELPER) -r $(REPO_ROOT) -b $(BRANCH_MANIFEST_OPTIONS)
 SYNC_OPTIONS := --no-manifest-update
 
-else # MANIFEST_BRANCHES
+else # !BRANCH_MANIFEST_OPTIONS
 
 BRANCH_MANIFEST_BUILD := true
 
-endif # MANIFEST_BRANCHES
+endif # !BRANCH_MANIFEST_OPTIONS
 
 ifdef PROJECT_ROOT
 

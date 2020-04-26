@@ -98,6 +98,12 @@ class RepoHandler:
                 # Update branch
                 manifest_project.attributes["dest-branch"] = branch
                 manifest_project.attributes["revision"] = f"refs/heads/{branch}"
+        for project, tag in map(lambda x: (x[0], x[1]), map(lambda y: y.split("/"), args.tag)):
+            # Iterate on matching projects
+            for manifest_project in filter(lambda p: self.project_name(p) == project, self.projects):
+                # Update tag
+                manifest_project.attributes["dest-branch"] = tag
+                manifest_project.attributes["revision"] = f"refs/tags/{tag}"
 
         # Serialize updated manifest
         branch_manifest = self.manifest_path.parent / "branch.xml"
@@ -138,9 +144,12 @@ def main(args):
     actions.add_argument("-u", "--url", action="store_true", help="Display manifest repository remote URL")
     actions.add_argument("-n", "--name", action="store_true", help="Display project name on repository")
     actions.add_argument("-m", "--manifest", action="store_true", help="Display current manifest relative path")
-    actions.add_argument("-b", "--branch-manifest", action="store_true", help="Generate a branch manifest for required project/branch (--branch)")
+    actions.add_argument(
+        "-b", "--branch-manifest", action="store_true", help="Generate a branch manifest for required project/branch (--branch) or tag (--tag)"
+    )
     actions.add_argument("-c", "--checkout", action="store_true", help="Checkout current project branch")
-    parser.add_argument("--branch", metavar="PROJECT/BRANCH", default=[], action="append", help="Add a configuration to be part of branch manifest generation")
+    parser.add_argument("--branch", metavar="PROJECT/BRANCH", default=[], action="append", help="Add a branch configuration to be part of manifest generation")
+    parser.add_argument("--tag", metavar="PROJECT/TAG", default=[], action="append", help="Add a tag configuration to be part of manifest generation")
     args = parser.parse_args(args)
 
     # Prepare repo metadata reader

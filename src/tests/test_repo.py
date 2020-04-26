@@ -70,6 +70,25 @@ class TestRepoHelperMisc(TestRepoHelper):
         for p in r.projects:
             if r.project_name(p) == "tools":
                 assert p.attributes["dest-branch"].value == "fake"
+                assert p.attributes["revision"].value == "refs/heads/fake"
+                found = True
+        assert found
+
+    def test_tag_manifest(self, repo_copy):
+        # Test to generate a branch manifest with a tag
+        manifests = self.repo / "manifests"
+        expected_branch = manifests / "branch.xml"
+        assert not expected_branch.exists()
+        assert self.call_repo(["-b", "--tag", "tools/1.0"]) == f"Generated branch manifest: {expected_branch}"
+        assert expected_branch.exists()
+
+        # Verify updated branch
+        r = RepoHandler(self.repo)
+        found = False
+        for p in r.projects:
+            if r.project_name(p) == "tools":
+                assert p.attributes["dest-branch"].value == "1.0"
+                assert p.attributes["revision"].value == "refs/tags/1.0"
                 found = True
         assert found
 
