@@ -6,6 +6,7 @@ import subprocess
 
 import pytest
 
+from helpers.common import read_dependencies
 from helpers.repo import RepoHandler, main
 from tests.test_shared import TestHelpers
 
@@ -34,6 +35,7 @@ class TestRepoHelper(TestHelpers):
         shutil.copytree(self.repo, repo_copy)
         self.repo = repo_copy
         logging.debug(f"Copied test repo in {self.repo}")
+        shutil.copytree(self.resources_folder / "workspace", self.test_folder / ".workspace")
         yield
 
     def build_repo(self, name):
@@ -92,20 +94,69 @@ class TestRepoHelperMisc(TestRepoHelper):
                 found = True
         assert found
 
-    @pytest.fixture
-    def cd_project_unknown(self, repo_copy):
-        initial_cwd = os.getcwd()
-        p_dir = self.repo.parent / "unknown"
-        p_dir.mkdir(parents=True)
-        os.chdir(str(p_dir))
-        yield p_dir
-        os.chdir(initial_cwd)
+    def test_release_manifest_missing_tags(self, cd_project_api, monkeypatch):
+        # Patch subprocess to fake the git call
+        monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: "".encode("utf-8"))
+
+        # Generate a release manifest
+        workspace = self.repo.parent.resolve() / ".workspace"
+        try:
+            self.call_repo(["--release-manifest", "-d", str(workspace / "deps.json")])
+            raise AssertionError("Shouldn't get there")
+        except RuntimeError as e:
+            assert "No tags found for project api" in str(e)
+
+    def test_release_manifest_ok(self, cd_project_api, monkeypatch):
+        # Patch subprocess to fake the git call
+        monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: ("1.2\n2.3" if cwd.name == "api" else "4.5\n6.7").encode("utf-8"))
+
+        # Generate a release manifest
+        workspace = self.repo.parent.resolve() / ".workspace"
+        expected_release = workspace / "tags" / "api" / "2.3.xml"
+        assert not expected_release.exists()
+        self.call_repo(["--release-manifest", "-d", str(workspace / "deps.json")]) == f"Generated release manifest: {expected_release}"
+        assert expected_release.exists()
+
+        # Verify updated branch
+        r = RepoHandler(self.repo, other_manifest=expected_release)
+        tested_projects = 0
+        total_projects = 0
+        for p in r.projects:
+            assert "group" not in p.attributes
+            total_projects += 1
+            if r.project_name(p) == "workspace":
+                assert p.attributes["dest-branch"].value == "api-2.3"
+                assert p.attributes["revision"].value == "refs/tags/api-2.3"
+                tested_projects += 1
+            elif r.project_name(p) == "api":
+                assert p.attributes["dest-branch"].value == "2.3"
+                assert p.attributes["revision"].value == "refs/tags/2.3"
+                tested_projects += 1
+            elif r.project_name(p) in ["tools", "sample_dep"]:
+                assert p.attributes["dest-branch"].value == "6.7"
+                assert p.attributes["revision"].value == "refs/tags/6.7"
+                tested_projects += 1
+        assert tested_projects == 4
+        assert total_projects == 4
 
     @pytest.fixture
     def cd_project_tools(self, repo_copy):
         initial_cwd = os.getcwd()
         p_dir = self.repo.parent / "tools"
         p_dir.mkdir(parents=True)
+        os.chdir(str(p_dir))
+        yield p_dir
+        os.chdir(initial_cwd)
+
+    @pytest.fixture
+    def cd_project_api(self, repo_copy):
+        initial_cwd = os.getcwd()
+
+        # Create some projects directories
+        (self.repo.parent / "tools").mkdir(parents=True)
+        (self.repo.parent / "core" / "api").mkdir(parents=True)
+        (self.repo.parent / "core" / "other").mkdir(parents=True)
+        p_dir = self.repo.parent / "core" / "api"
         os.chdir(str(p_dir))
         yield p_dir
         os.chdir(initial_cwd)
@@ -131,10 +182,6 @@ class TestRepoHelperMisc(TestRepoHelper):
         assert "checkout" in self.git_args
         assert branch in self.git_args
 
-    def test_checkout_unknown(self, cd_project_unknown, monkeypatch):
-        # Unknown project checkout
-        self.check_checkout(cd_project_unknown, "master", monkeypatch)
-
     def test_checkout_tools(self, cd_project_tools, monkeypatch):
         # "tools" project checkout
         self.check_checkout(cd_project_tools, "fake", monkeypatch)
@@ -143,9 +190,15 @@ class TestRepoHelperMisc(TestRepoHelper):
         # Verify name in normal project
         assert self.call_repo(["-n"]) == "tools"
 
-    def test_project_name_unknown(self, cd_project_unknown):
-        # Verify name in unknown project
-        assert self.call_repo(["-n"]) == ""
+    def test_dependencies(self):
+        # Just test dependencies loading mechanisms
+        deps = read_dependencies(self.resources_folder / "workspace" / "deps.json", "api")
+        assert len(deps) == 2
+        assert "tools" in deps
+        assert "sample_dep" in deps
+        deps = read_dependencies(self.resources_folder / "workspace" / "deps.json", "other")
+        assert len(deps) == 1
+        assert "tools" in deps
 
 
 class RepoHelperSharedTests(TestRepoHelper):

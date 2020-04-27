@@ -28,3 +28,13 @@ VERSION_INIT_STATUS := $(shell if test ! -e $(VERSION_TIME); then touch $(CACHE_
 VERSION_DIFF_STATUS := $(shell if ! diff $(VERSION_NEW_TIME) $(VERSION_TIME) >/dev/null 2>&1; then cp $(VERSION_NEW_TIME) $(VERSION_TIME); fi)
 
 endif # PROJECT_ROOT
+
+# Shared workspace settings
+ifdef WORKSPACE_PROJECT_ROOT
+
+# Map of inter-project dependencies within the workspace
+ifneq ($(wildcard $(WORKSPACE_PROJECT_ROOT)/deps.json),)
+WORKSPACE_DEPS_MAP := $(WORKSPACE_PROJECT_ROOT)/deps.json
+endif
+
+endif # WORKSPACE_PROJECT_ROOT

@@ -1,6 +1,7 @@
 """
 Some shared functions for helpers
 """
+import json
 import subprocess
 import time
 from enum import Enum
@@ -178,3 +179,18 @@ def capture_cmd(args, cmd, stamp=None) -> int:
 
     # In all cases, return sub-process rc
     return rc
+
+
+# Reads dependencies list for a given project
+def read_dependencies(deps: Path, name: str) -> list:
+    # Load dependencies map from file
+    with deps.open("r") as f:
+        deps_map = json.load(f)
+
+    # Return the one for current project + all shared ones
+    out = set()
+    for item in ["_shared", name]:
+        if item in deps_map:
+            for item_dep in deps_map[item]:
+                out.add(item_dep)
+    return out
