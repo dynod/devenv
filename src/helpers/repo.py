@@ -114,6 +114,10 @@ class RepoHandler:
         # Get project name for current path
         return self.current_project_name
 
+    def print_path(self, args: Namespace):
+        # Get project path for required name
+        return self.project_path(self.project_by_name(args.path))
+
     def generate_branch_manifest(self, args: Namespace):
         # Build branch manifest
 
@@ -217,6 +221,7 @@ def main(args):
     )
     actions.add_argument("--release-manifest", action="store_true", help="Generate a release manifest for current project latest tag")
     actions.add_argument("-c", "--checkout", action="store_true", help="Checkout current project branch")
+    actions.add_argument("-p", "--path", metavar="NAME", help="Display path for project NAME")
     parser.add_argument("--branch", metavar="PROJECT/BRANCH", default=[], action="append", help="Add a branch configuration to be part of manifest generation")
     parser.add_argument("--tag", metavar="PROJECT/TAG", default=[], action="append", help="Add a tag configuration to be part of manifest generation")
     parser.add_argument("-d", "--dependencies", type=Path, help="Workspace dependencies map file")
@@ -234,6 +239,7 @@ def main(args):
     actions[args.branch_manifest] = repo_root.generate_branch_manifest
     actions[args.release_manifest] = repo_root.generate_release_manifest
     actions[args.checkout] = repo_root.checkout_project
+    actions[args.path is not None] = repo_root.print_path
     if True in actions:
         return actions[True](args)
     else:
