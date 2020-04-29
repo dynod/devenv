@@ -7,7 +7,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup workspace
-              uses: dynod/repo-checkout@v1
+              uses: dynod/repo-checkout@1.0.0
               with:
                   url: https://github.com/dynod/workspace.git
                   group: tools

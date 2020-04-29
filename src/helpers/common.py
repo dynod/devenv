@@ -105,7 +105,8 @@ def pretty_print(stamp: str, icon: Icon, name: str, target: str, level: Level, s
         + f"{Styles.BOLD}{ICONS[Icon.FOLDER]}{name} "  # Folder (project)
         + f"{ICONS[Icon.TARGET]}{target} "  # Current target name
         + f"{Styles.BLUE}-{Styles.RESET} "  # Separator
-        + f"{LVL_STYLES[level]}{status}{Styles.RESET}"  # Status string
+        + f"{LVL_STYLES[level]}{status}{Styles.RESET}",  # Status string
+        flush=True,
     )
 
 
