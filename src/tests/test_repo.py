@@ -190,6 +190,10 @@ class TestRepoHelperMisc(TestRepoHelper):
         # Verify name in normal project
         assert self.call_repo(["-n"]) == "tools"
 
+    def test_project_path(self, cd_project_tools):
+        # Verify path from name
+        assert self.call_repo(["-p", "sample_dep"]) == "core/other"
+
     def test_dependencies(self):
         # Just test dependencies loading mechanisms
         deps = read_dependencies(self.resources_folder / "workspace" / "deps.json", "api")
