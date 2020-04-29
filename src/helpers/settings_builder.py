@@ -33,9 +33,18 @@ class SettingsBuilder(ABC):
         # Some patterns to replace?
         patterns = self.list_vars(content)
         if len(patterns) > 0:
-            # Get values from makefile
+            # Prepare environment:
+            # - remove ones coming from calling make instance
+            # - set ones to configure vars display
+            env = dict(os.environ)
+            for make_var in list(filter(lambda n: n.startswith("MAKE"), env.keys())):
+                del env[make_var]
+            del env["MFLAGS"]
             pattern_str = " ".join(patterns)
-            cp = subprocess.run(["make", "display"], env={"SUB_MAKE": "1", "DISPLAY_MAKEFILE_VAR": pattern_str}, stdout=subprocess.PIPE)
+            env.update({"SUB_MAKE": "1", "DISPLAY_MAKEFILE_VAR": pattern_str})
+
+            # Get values from makefile
+            cp = subprocess.run(["make", "display"], env=env, stdout=subprocess.PIPE)
             if cp.returncode != 0:
                 raise RuntimeError("Unexpected error while running make display for patterns: " + pattern_str)
             out = cp.stdout.decode("utf-8").rstrip("\n")

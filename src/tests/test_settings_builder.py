@@ -40,7 +40,7 @@ class TestSettingsBuilderHelper(TestHelpers):
 
     @property
     def devenv_setup(self):
-        return self.get_root_folder() / "templates" / SETUP_CFG
+        return self.get_root_folder() / "templates" / "setup-test.cfg"
 
     @property
     def setup_resources(self):
@@ -63,20 +63,20 @@ class TestSettingsBuilderHelper(TestHelpers):
     def test_setup_cfg_1file(self):
         # Test with one file
         assert self.run_builder(SETUP_CFG, [self.devenv_setup]) == 0
-        self.check_sections(["flake8", "isort"])
-        assert self.built_setup.get("flake8", "htmldir") == "out/flake-report"
+        self.check_sections(["run", "tool:pytest"])
+        assert self.built_setup.get("tool:pytest", "testpaths") == "src/tests"
 
     def test_setup_cfg_2files(self):
         # Test with two files, without conflict
         assert self.run_builder(SETUP_CFG, [self.devenv_setup, self.setup_resources / "workspace.cfg"]) == 0
-        self.check_sections(["flake8", "isort", "dummy"])
+        self.check_sections(["run", "tool:pytest", "dummy"])
         assert self.built_setup.get("dummy", "foo") == "bar"
         assert self.built_setup.get("dummy", "other") == "1,2,3"
 
     def test_setup_cfg_3files(self):
         # Test with three files, with merged sections
         assert self.run_builder(SETUP_CFG, [self.devenv_setup, self.setup_resources / "workspace.cfg", self.setup_resources / "project.cfg"]) == 0
-        self.check_sections(["flake8", "isort", "dummy"])
+        self.check_sections(["run", "tool:pytest", "dummy"])
         assert self.built_setup.get("dummy", "foo") == "other"
         assert self.built_setup.get("dummy", "other") == "1,2,3"
 
