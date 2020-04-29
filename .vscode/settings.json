@@ -6,6 +6,7 @@
     "python.testing.pytestEnabled": true,
     "cSpell.words": [
         "DEPS",
+        "MFLAGS",
         "Makefiles",
         "XDIST",
         "chdir",
