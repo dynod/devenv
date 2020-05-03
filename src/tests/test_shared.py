@@ -1,13 +1,10 @@
 # Just a common class to define root folder
-from tests.test_helper import Path, TestUtils
+from pathlib import Path
 
-ROOT = Path(__file__).parent.parent.parent
+from pytest_multilog import TestHelper
 
 
-class TestHelpers(TestUtils):
-    def get_root_folder(self) -> Path:
-        return ROOT
-
+class TestHelpers(TestHelper):
     @property
     def run_folder(self) -> Path:
         return self.test_folder / ("out." + str(self.run_id))

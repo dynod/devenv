@@ -40,7 +40,7 @@ class TestSettingsBuilderHelper(TestHelpers):
 
     @property
     def devenv_setup(self):
-        return self.get_root_folder() / "templates" / "setup-test.cfg"
+        return self.root_folder / "templates" / "setup-test.cfg"
 
     @property
     def setup_resources(self):
