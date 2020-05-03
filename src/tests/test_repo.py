@@ -3,10 +3,10 @@ import logging
 import os
 import shutil
 import subprocess
+from argparse import Namespace
 
 import pytest
 
-from helpers.common import read_dependencies
 from helpers.repo import RepoHandler, main
 from tests.test_shared import TestHelpers
 
@@ -194,13 +194,20 @@ class TestRepoHelperMisc(TestRepoHelper):
         # Verify path from name
         assert self.call_repo(["-p", "sample_dep"]) == "core/other"
 
-    def test_dependencies(self):
+    def test_deps_path(self, cd_project_api):
+        # Verify dependencies paths
+        workspace = self.repo.parent.resolve() / ".workspace"
+        assert self.call_repo(["-p", "@deps", "-d", str(workspace / "deps.json")]) == "core/other\ntools"
+
+    def test_dependencies(self, repo_copy):
         # Just test dependencies loading mechanisms
-        deps = read_dependencies(self.resources_folder / "workspace" / "deps.json", "api")
+        r = RepoHandler(self.repo)
+        args = Namespace(**{"dependencies": self.resources_folder / "workspace" / "deps.json"})
+        deps = r.read_dependencies(args, "api")
         assert len(deps) == 2
         assert "tools" in deps
         assert "sample_dep" in deps
-        deps = read_dependencies(self.resources_folder / "workspace" / "deps.json", "other")
+        deps = r.read_dependencies(args, "other")
         assert len(deps) == 1
         assert "tools" in deps
 

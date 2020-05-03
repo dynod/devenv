@@ -1,9 +1,6 @@
 # Helpers location
 HELPERS_ROOT := $(DEVENV_ROOT)/helpers
 
-# Helper for repo metadata
-REPO_HELPER := $(HELPERS_ROOT)/repo.py
-
 # Helper for status display
 STATUS_HELPER := $(HELPERS_ROOT)/status.py
 

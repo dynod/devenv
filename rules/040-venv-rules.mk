@@ -6,14 +6,6 @@
 # Only if current project is a Python one
 ifdef IS_PYTHON_PROJECT
 
-ifdef SUB_MAKE
-# Triggered at workspace level, don't check system dependencies (already done)
-PYTHON_VENV_DEPS := $(PYTHON_VENV_REQUIREMENTS)
-else
-# Triggered at project level, check system dependencies
-PYTHON_VENV_DEPS := $(PYTHON_VENV_REQUIREMENTS) $(SYSDEPS_TIME)
-endif
-
 # CI: currently building *this* project?
 ifdef CI
 ifeq ($(CI_PROJECT),$(PROJECT_NAME))
@@ -28,7 +20,11 @@ ifdef BUILD_VENV
 # Virtual env for current project
 # Handle clean of venv folder if something went wrong...
 $(PYTHON_VENV): $(PYTHON_VENV_DEPS)
-	$(GIFT_STATUS) --lang python -s "Create Python virtual environment" -- $(HELPERS_ROOT)/setup-venv.sh $(PYTHON_FOR_VENV) $(PYTHON_VENV) $(PYTHON_VENV_REQUIREMENTS)
+	$(GIFT_STATUS) --lang python -s "Update Python virtual environment" -- $(HELPERS_ROOT)/setup-venv.sh \
+		$(PYTHON_FOR_VENV) \
+		$(PYTHON_VENV) \
+		$(PYTHON_VENV_REQUIREMENTS) \
+		$(PYTHON_VENV_WORKSPACE_REQUIREMENTS)
 
 # Clean virtual env
 clean-venv:
@@ -49,10 +45,10 @@ ifndef PROJECT_ROOT
 
 ifdef CI
 CLEAN_VENV_STATUS := "Clean Python virtual environment for CI built project ($(CI_PROJECT))"
-BUILD_VENV_STATUS := "Create Python virtual environment for CI built project ($(CI_PROJECT))"
+BUILD_VENV_STATUS := "Update Python virtual environment for CI built project ($(CI_PROJECT))"
 else  # !CI
 CLEAN_VENV_STATUS := "Clean all Python virtual environments"
-BUILD_VENV_STATUS := "Create all Python virtual environments"
+BUILD_VENV_STATUS := "Update all Python virtual environments"
 endif # !CI
 
 # At workspace root, trigger venv build for all projects

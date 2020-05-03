@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Helper script for repo handling
+import json
 import os
 import re
 import subprocess
@@ -8,13 +9,6 @@ import sys
 from argparse import ArgumentParser, Namespace
 from pathlib import Path
 from xml.dom import minidom
-
-if __name__ == "__main__":  # pragma: no cover
-    # Hack for standalone invocation
-    SRC = Path(__file__).parent.parent
-    sys.path.insert(0, str(SRC))
-
-from helpers.common import read_dependencies  # noqa: E402 isort:skip
 
 
 class RepoHandler:
@@ -115,6 +109,14 @@ class RepoHandler:
         return self.current_project_name
 
     def print_path(self, args: Namespace):
+        # Check mode:
+        if args.path == "@deps" and args.dependencies is not None:
+            # Get all paths for current project dependencies
+            out = ""
+            for dep in self.read_dependencies(args, self.current_project_name):
+                out += ("\n" if len(out) else "") + self.project_path(self.project_by_name(dep))
+            return out
+
         # Get project path for required name
         return self.project_path(self.project_by_name(args.path))
 
@@ -160,7 +162,7 @@ class RepoHandler:
 
         # Get project dependencies
         current_n = self.current_project_name
-        deps = read_dependencies(args.dependencies, current_n)
+        deps = self.read_dependencies(args, current_n)
 
         # Get current project last tag
         last_tag = self.project_last_tag(self.current_project)
@@ -205,6 +207,21 @@ class RepoHandler:
         # Checkout project
         subprocess.check_call(["git", "checkout", branch])
         return f"Branch {branch} checked out for project {self.current_project_name}"
+
+    # Reads dependencies list for a given project
+    def read_dependencies(self, args, name: str) -> list:
+        # Load dependencies map from file
+        with args.dependencies.open("r") as f:
+            deps_map = json.load(f)
+
+        # Return the one for current project + all shared ones
+        out = set()
+        for item in ["_shared", name]:
+            if item in deps_map:
+                for item_dep in deps_map[item]:
+                    if item_dep != name:
+                        out.add(item_dep)
+        return sorted(out)
 
 
 def main(args):

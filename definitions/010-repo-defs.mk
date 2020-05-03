@@ -10,14 +10,17 @@ CACHE_SHARED_DIR := $(shell mkdir -p $(REPO_ROOT)/.cache && echo $(REPO_ROOT)/.c
 # Cache for original manifest name
 ORIGINAL_MANIFEST := $(CACHE_SHARED_DIR)/original.manifest
 
+# Helper for repo metadata
+REPO_HELPER := $(HELPERS_ROOT)/repo.py -r $(REPO_ROOT)
+
 # Repo metadata
-REPO_URL := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --url)
-REPO_GROUPS := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --groups)
-REPO_CHECKOUT_CMD := $(REPO_HELPER) -r $(REPO_ROOT) --checkout
+REPO_URL := $(shell $(REPO_HELPER) --url)
+REPO_GROUPS := $(shell $(REPO_HELPER) --groups)
+REPO_CHECKOUT_CMD := $(REPO_HELPER) --checkout
 ifdef MANIFEST_RESET
 REPO_MANIFEST := $(shell if test -e $(ORIGINAL_MANIFEST); then cat $(ORIGINAL_MANIFEST); else echo "manifest.xml"; fi)
 else
-REPO_MANIFEST := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --manifest)
+REPO_MANIFEST := $(shell $(REPO_HELPER) --manifest)
 endif
 
 # All in one setup rules
@@ -46,7 +49,7 @@ ifdef BRANCH_MANIFEST_OPTIONS
 ORIGINAL_MANIFEST_STATUS := $(shell if test ! -e $(ORIGINAL_MANIFEST); then echo $(REPO_MANIFEST) > $(ORIGINAL_MANIFEST); fi)
 
 # Generate branch manifest
-BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" -- $(REPO_HELPER) -r $(REPO_ROOT) -b $(BRANCH_MANIFEST_OPTIONS)
+BRANCH_MANIFEST_BUILD = $(FILE_STATUS) -s "Generating branch manifest" -- $(REPO_HELPER) -b $(BRANCH_MANIFEST_OPTIONS)
 SYNC_OPTIONS := --no-manifest-update
 
 else # !BRANCH_MANIFEST_OPTIONS
@@ -58,7 +61,7 @@ endif # !BRANCH_MANIFEST_OPTIONS
 ifdef PROJECT_ROOT
 
 # Set project name
-PROJECT_NAME := $(shell $(REPO_HELPER) -r $(REPO_ROOT) --name)
+PROJECT_NAME := $(shell $(REPO_HELPER) --name)
 
 # Project cache
 CACHE_DIR := $(shell mkdir -p $(CACHE_SHARED_DIR)/$(PROJECT_NAME) && echo $(CACHE_SHARED_DIR)/$(PROJECT_NAME))
