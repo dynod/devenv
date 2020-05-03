@@ -3,10 +3,6 @@
 # Python project?
 ifdef IS_PYTHON_PROJECT
 
-# Assume tests are localted in "tests" folder by default
-# (can be overriden)
-TEST_FOLDER ?= $(SRC_FOLDER)/tests/
-
 # All Python test files
 TEST_FILES := $(shell find $(TEST_FOLDER) -name '*.py' 2>/dev/null)
 
