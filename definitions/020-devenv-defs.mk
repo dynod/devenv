@@ -11,6 +11,9 @@ PROJECT_DEVENV_SETTINGS := $(PROJECT_ROOT)/$(DEVENV)
 # Source folder
 SRC_FOLDER ?= $(PROJECT_ROOT)/src
 
+# Assume tests are located in "src/tests" folder by default
+TEST_FOLDER ?= $(SRC_FOLDER)/tests
+
 # Output folder
 OUTPUT_ROOT ?= $(PROJECT_ROOT)/out
 
