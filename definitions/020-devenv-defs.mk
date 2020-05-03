@@ -34,10 +34,13 @@ endif # PROJECT_ROOT
 
 # Shared workspace settings
 ifdef WORKSPACE_PROJECT_ROOT
+ifneq ($(wildcard $(WORKSPACE_PROJECT_ROOT)/deps.json),)
 
 # Map of inter-project dependencies within the workspace
-ifneq ($(wildcard $(WORKSPACE_PROJECT_ROOT)/deps.json),)
 WORKSPACE_DEPS_MAP := $(WORKSPACE_PROJECT_ROOT)/deps.json
-endif
 
+# List of current project dependencies paths
+PROJECT_DEPS_PATHS := $(shell $(REPO_HELPER) -p @deps --dependencies $(WORKSPACE_DEPS_MAP))
+
+endif # WORKSPACE_DEPS_MAP
 endif # WORKSPACE_PROJECT_ROOT
