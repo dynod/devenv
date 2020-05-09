@@ -89,7 +89,8 @@ class RepoHandler:
 
     @property
     def current_project(self) -> minidom.Node:
-        return self.project_by_path(self.current_project_path)
+        current_path = self.current_project_path
+        return self.project_by_path(current_path) if str(current_path) != "." else None
 
     def print_groups(self, args: Namespace):
         # Get filtered groups (i.e. without the default/notdefault ones)

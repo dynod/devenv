@@ -30,8 +30,6 @@ VERSION_TIME := $(CACHE_DIR)/version.time
 VERSION_INIT_STATUS := $(shell if test ! -e $(VERSION_TIME); then touch $(CACHE_DIR)/version.time; fi)
 VERSION_DIFF_STATUS := $(shell if ! diff $(VERSION_NEW_TIME) $(VERSION_TIME) >/dev/null 2>&1; then cp $(VERSION_NEW_TIME) $(VERSION_TIME); fi)
 
-endif # PROJECT_ROOT
-
 # Shared workspace settings
 ifdef WORKSPACE_PROJECT_ROOT
 ifneq ($(wildcard $(WORKSPACE_PROJECT_ROOT)/deps.json),)
@@ -44,3 +42,5 @@ PROJECT_DEPS_PATHS := $(shell $(REPO_HELPER) -p @deps --dependencies $(WORKSPACE
 
 endif # WORKSPACE_DEPS_MAP
 endif # WORKSPACE_PROJECT_ROOT
+
+endif # PROJECT_ROOT
