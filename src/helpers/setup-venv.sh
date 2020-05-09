@@ -25,7 +25,7 @@ RC=0
 $PYTHON_FOR_VENV -m venv $PYTHON_VENV || RC=$?
 if test "$RC" -ne 0; then
     echo "Cleaning corrupted $PYTHON_VENV folder"
-    rm -R $PYTHON_VENV;
+    rm -Rf $PYTHON_VENV;
     exit $RC;
 fi
 
