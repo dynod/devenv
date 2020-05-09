@@ -148,15 +148,26 @@ class TestRepoHelperMisc(TestRepoHelper):
         yield p_dir
         os.chdir(initial_cwd)
 
-    @pytest.fixture
-    def cd_project_api(self, repo_copy):
-        initial_cwd = os.getcwd()
-
+    def create_test_workspace(self):
         # Create some projects directories
         (self.repo.parent / "tools").mkdir(parents=True)
         (self.repo.parent / "core" / "api").mkdir(parents=True)
         (self.repo.parent / "core" / "other").mkdir(parents=True)
+
+    @pytest.fixture
+    def cd_project_api(self, repo_copy):
+        initial_cwd = os.getcwd()
+        self.create_test_workspace()
         p_dir = self.repo.parent / "core" / "api"
+        os.chdir(str(p_dir))
+        yield p_dir
+        os.chdir(initial_cwd)
+
+    @pytest.fixture
+    def cd_workspace_root(self, repo_copy):
+        initial_cwd = os.getcwd()
+        self.create_test_workspace()
+        p_dir = self.repo.parent
         os.chdir(str(p_dir))
         yield p_dir
         os.chdir(initial_cwd)
@@ -198,6 +209,11 @@ class TestRepoHelperMisc(TestRepoHelper):
         # Verify dependencies paths
         workspace = self.repo.parent.resolve() / ".workspace"
         assert self.call_repo(["-p", "@deps", "-d", str(workspace / "deps.json")]) == "core/other\ntools"
+
+    def test_deps_from_root(self, cd_workspace_root):
+        # Verify dependencies paths
+        workspace = self.repo.parent.resolve() / ".workspace"
+        assert self.call_repo(["-p", "@deps", "-d", str(workspace / "deps.json")]) == "tools"
 
     def test_dependencies(self, repo_copy):
         # Just test dependencies loading mechanisms
