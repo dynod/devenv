@@ -7,13 +7,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Setup workspace
-              uses: dynod/repo-checkout@1.0.0
+              uses: dynod/repo-checkout@1.1.0
               with:
                   url: https://github.com/dynod/workspace.git
                   group: tools
                   env: OUTPUT_ROOT=/github/workspace/out
             - name: Run tests
-              uses: dynod/call-make@1.0.0
+              uses: dynod/call-make@1.1.0
               with:
                   target: tests
                   env: OUTPUT_ROOT=/github/workspace/out
