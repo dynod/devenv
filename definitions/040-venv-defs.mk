@@ -18,7 +18,7 @@ IN_PYTHON_VENV := source $(PYTHON_VENV)/bin/activate &&
 # Python distribution?
 ifdef PYTHON_DISTRIBUTION
 # Local venv install
-PYTHON_DISTRIBUTION_INSTALL := $(PYTHON_VENV)/lib/$(PYTHON_FOR_VENV)/site-packages/$(shell echo $(PYTHON_PACKAGE) | sed -e 's/-/_/g')-$(VERSION).egg-info
+PYTHON_DISTRIBUTION_INSTALL := $(PYTHON_VENV)/lib/$(PYTHON_FOR_VENV)/site-packages/$(shell echo $(PYTHON_PACKAGE) | sed -e 's/-/_/g')-$(shell echo $(VERSION) | sed -e 's/-/_/g').dist-info
 endif
 
 ifdef SUB_MAKE
