@@ -21,7 +21,7 @@ OUTPUT_ROOT ?= $(PROJECT_ROOT)/out
 ARTIFACTS_ROOT ?= $(OUTPUT_ROOT)/artifacts
 
 # Version
-VERSION ?= $(shell git describe --tags 2>/dev/null || echo "0.0-`git describe --always`")
+VERSION ?= $(shell git describe --tags 2>/dev/null || echo "0.0.0-$$(git rev-list --count $$(git rev-parse --abbrev-ref HEAD))-g$$(git describe --always)")
 
 # Prepare to touch version file if version changed
 VERSION_NEW_TIME := $(CACHE_DIR)/new_version.time
