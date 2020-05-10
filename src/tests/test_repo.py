@@ -1,7 +1,6 @@
 # Tests for repo helper
 import logging
 import os
-import shutil
 import subprocess
 from argparse import Namespace
 
@@ -26,22 +25,6 @@ class TestRepoHelper(TestHelpers):
     def fake_repo_linked(self, logs):
         self.build_repo("linked")
         yield
-
-    @pytest.fixture
-    def repo_copy(self, logs):
-        # Copy a repo sample in test folder
-        self.build_repo("default")
-        repo_copy = self.test_folder / "repo"
-        shutil.copytree(self.repo, repo_copy)
-        self.repo = repo_copy
-        logging.debug(f"Copied test repo in {self.repo}")
-        shutil.copytree(self.resources_folder / "workspace", self.test_folder / ".workspace")
-        yield
-
-    def build_repo(self, name):
-        # Prepare a fake repo folder for tests
-        self.repo = self.resources_folder / "repo" / name
-        logging.debug(f"Use test repo in {self.repo}")
 
     def call_repo(self, args: list) -> str:
         # Call helper and catch output
@@ -143,21 +126,13 @@ class TestRepoHelperMisc(TestRepoHelper):
     def cd_project_tools(self, repo_copy):
         initial_cwd = os.getcwd()
         p_dir = self.repo.parent / "tools"
-        p_dir.mkdir(parents=True)
         os.chdir(str(p_dir))
         yield p_dir
         os.chdir(initial_cwd)
 
-    def create_test_workspace(self):
-        # Create some projects directories
-        (self.repo.parent / "tools").mkdir(parents=True)
-        (self.repo.parent / "core" / "api").mkdir(parents=True)
-        (self.repo.parent / "core" / "other").mkdir(parents=True)
-
     @pytest.fixture
     def cd_project_api(self, repo_copy):
         initial_cwd = os.getcwd()
-        self.create_test_workspace()
         p_dir = self.repo.parent / "core" / "api"
         os.chdir(str(p_dir))
         yield p_dir
@@ -166,7 +141,6 @@ class TestRepoHelperMisc(TestRepoHelper):
     @pytest.fixture
     def cd_workspace_root(self, repo_copy):
         initial_cwd = os.getcwd()
-        self.create_test_workspace()
         p_dir = self.repo.parent
         os.chdir(str(p_dir))
         yield p_dir
@@ -218,7 +192,7 @@ class TestRepoHelperMisc(TestRepoHelper):
     def test_dependencies(self, repo_copy):
         # Just test dependencies loading mechanisms
         r = RepoHandler(self.repo)
-        args = Namespace(**{"dependencies": self.resources_folder / "workspace" / "deps.json"})
+        args = Namespace(**{"dependencies": self.resources_folder / "workspace" / ".workspace" / "deps.json"})
         deps = r.read_dependencies(args, "api")
         assert len(deps) == 2
         assert "tools" in deps
