@@ -29,6 +29,9 @@ if test "$RC" -ne 0; then
     exit $RC;
 fi
 
+# Update pip first
+(source $PYTHON_VENV/bin/activate && pip install pip --upgrade)
+
 # Install dependencies first, if any, and if file exist
 PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
 if test -n "${DIST_LIST}"; then
