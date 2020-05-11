@@ -10,7 +10,7 @@ build: install
 
 # Distribution venv install
 $(PYTHON_DISTRIBUTION_INSTALL): $(PYTHON_DISTRIBUTION)
-	$(IN_PYTHON_VENV)  $(INSTALL_STATUS) --lang python -s "Install Python distribution" -t install -- pip install $(PYTHON_DISTRIBUTION)
+	$(IN_PYTHON_VENV)  $(INSTALL_STATUS) --lang python -s "Install Python distribution" -t install -- pip install $(PYTHON_VENV_EXTRA_ARGS) $(PYTHON_DISTRIBUTION)
 	touch $@
 
 endif # PYTHON_DISTRIBUTION
