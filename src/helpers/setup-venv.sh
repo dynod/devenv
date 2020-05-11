@@ -30,7 +30,7 @@ if test "$RC" -ne 0; then
 fi
 
 # Install dependencies first, if any, and if file exist
-PIP_CMD="pip install --upgrade --force-reinstall"
+PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
 if test -n "${DIST_LIST}"; then
     for DIST in $DIST_LIST; do
         PIP_CMD="$PIP_CMD ${DIST}"
@@ -39,7 +39,7 @@ if test -n "${DIST_LIST}"; then
 fi
 
 # Finaly finish setup by doing pip installs
-PIP_CMD="pip install"
+PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
 for DEPFILE in $REQS_LIST; do
     PIP_CMD="$PIP_CMD -r $DEPFILE"
 done

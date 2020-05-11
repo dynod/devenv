@@ -39,4 +39,11 @@ PYTHON_VENV_DEPS += $(shell echo "$(PYTHON_VENV_WORKSPACE_REQUIREMENTS)" | grep 
 endif # !SUB_MAKE
 endif # WORKSPACE_DEPS_MAP
 
+ifdef PYTHON_INTERNAL_INDEX_URL
+
+# Extra index to be added to pip commands
+PYTHON_VENV_EXTRA_ARGS := --extra-index-url $(PYTHON_INTERNAL_INDEX_URL) --trusted-host $(shell echo $(PYTHON_INTERNAL_INDEX_URL) | sed -e "s|http://\([^:/]*\)[:/].*|\1|")
+
+endif # PYTHON_INTERNAL_INDEX_URL
+
 endif # IS_PYTHON_PROJECT
