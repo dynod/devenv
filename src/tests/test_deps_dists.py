@@ -33,9 +33,3 @@ class TestDepsDistsHelper(TestHelpers):
         os.environ["OUTPUT_ROOT"] = (self.test_project / "out").as_posix()
         assert self.call_helper() == artifact.resolve().as_posix()
         del os.environ["OUTPUT_ROOT"]
-
-    def test_repo(self):
-        # Local dep not built, but internal repo provided
-        os.environ["PYTHON_INTERNAL_REPOSITORY_URL"] = "http://foo.org/artifacts"
-        assert self.call_helper() == "http://foo.org/artifacts/foo-stuff-1.2.3.tar.gz"
-        del os.environ["PYTHON_INTERNAL_REPOSITORY_URL"]

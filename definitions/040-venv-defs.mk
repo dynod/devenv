@@ -34,7 +34,7 @@ ifndef SUB_MAKE
 
 # Add project dependencies distributions to venv dependencies
 PYTHON_VENV_WORKSPACE_REQUIREMENTS := $(shell $(HELPERS_ROOT)/list-deps-dists.sh $(foreach P,$(PROJECT_DEPS_PATHS),$(WORKSPACE_ROOT)/$(P)))
-PYTHON_VENV_DEPS += $(shell echo "$(PYTHON_VENV_WORKSPACE_REQUIREMENTS)" | grep -vE '^http://')
+PYTHON_VENV_DEPS += $(PYTHON_VENV_WORKSPACE_REQUIREMENTS)
 
 endif # !SUB_MAKE
 endif # WORKSPACE_DEPS_MAP
