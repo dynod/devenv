@@ -164,6 +164,7 @@ class RepoHandler:
         # Get project dependencies
         current_n = self.current_project_name
         deps = self.read_dependencies(args, current_n)
+        deps.extend(["workspace", "devenv"])  # Everything depends on workspace and devenv
 
         # Get current project last tag
         last_tag = self.project_last_tag(self.current_project)
@@ -171,8 +172,6 @@ class RepoHandler:
         # Will create workspace tag
         workspace_tag = current_n + "-" + last_tag
         workspace_project = self.project_by_name("workspace")
-        workspace_project.attributes["dest-branch"] = workspace_tag
-        workspace_project.attributes["revision"] = f"refs/tags/{workspace_tag}"
 
         # Iterate on all manifest projects
         to_remove = []
@@ -181,13 +180,16 @@ class RepoHandler:
             if n == current_n or n in deps:
                 # Current project or dependency: need to be part of the manifest
 
-                # Update tag
-                tag = self.project_last_tag(project)
-                project.attributes["dest-branch"] = tag
-                project.attributes["revision"] = f"refs/tags/{tag}"
-                project.removeAttribute("groups")
-            elif n != "workspace":
-                # Shall be removed from the release manifest: nothing to do with current project
+                # Check if current revision is not already a tag (or if current project is the workspace one)
+                is_workspace = n == "workspace"
+                if ("revision" not in project.attributes) or (not project.attributes["revision"].value.startswith("refs/tags/")) or is_workspace:
+                    # Update tag
+                    tag = workspace_tag if is_workspace else self.project_last_tag(project)
+                    project.attributes["dest-branch"] = tag
+                    project.attributes["revision"] = f"refs/tags/{tag}"
+                    project.removeAttribute("groups")
+            else:
+                # Shall be removed from the release manifest: nothing to do with this project
                 to_remove.append(project)
 
         # Remove useless projects from release manifest

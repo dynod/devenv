@@ -4,7 +4,7 @@
     <default remote="some-github" revision="refs/heads/master"/>
 
     <!-- Tools -->
-    <project path="tools" name="tools" dest-branch="master" groups="tools">
+    <project path="tools" name="tools" dest-branch="master" revision="refs/heads/master" groups="tools">
         <linkfile src="Makefile" dest="Makefile"/>
     </project>
 
@@ -13,7 +13,7 @@
 
     <!-- Core -->
     <project path="core/api" name="api" dest-branch="master" groups="notdefault,core"/>
-    <project path="core/other" name="sample_dep" dest-branch="master" groups="notdefault,core"/>
+    <project path="core/other" name="sample_dep" dest-branch="9.9.9" revision="refs/tags/9.9.9" groups="notdefault,core"/>
 
     <project path="something" name="another_project" dest-branch="master" groups="notdefault,core"/>
 </manifest>

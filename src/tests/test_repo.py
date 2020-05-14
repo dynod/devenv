@@ -115,9 +115,13 @@ class TestRepoHelperMisc(TestRepoHelper):
                 assert p.attributes["dest-branch"].value == "2.3"
                 assert p.attributes["revision"].value == "refs/tags/2.3"
                 tested_projects += 1
-            elif r.project_name(p) in ["tools", "sample_dep"]:
+            elif r.project_name(p) in ["tools"]:
                 assert p.attributes["dest-branch"].value == "6.7"
                 assert p.attributes["revision"].value == "refs/tags/6.7"
+                tested_projects += 1
+            elif r.project_name(p) in ["sample_dep"]:
+                assert p.attributes["dest-branch"].value == "9.9.9"
+                assert p.attributes["revision"].value == "refs/tags/9.9.9"
                 tested_projects += 1
         assert tested_projects == 4
         assert total_projects == 4
