@@ -204,6 +204,8 @@ class TestRepoHelperMisc(TestRepoHelper):
         deps = r.read_dependencies(args, "other")
         assert len(deps) == 1
         assert "tools" in deps
+        deps = r.read_dependencies(args, "tools")
+        assert len(deps) == 0
 
 
 class RepoHelperSharedTests(TestRepoHelper):
