@@ -6,17 +6,6 @@
 # Only if current project is a Python one
 ifdef IS_PYTHON_PROJECT
 
-# CI: currently building *this* project?
-ifdef CI
-ifeq ($(CI_PROJECT),$(PROJECT_NAME))
-BUILD_VENV = 1
-endif # CI_PROJECT == PROJECT_NAME
-else  # !CI
-BUILD_VENV = 1
-endif # !CI
-
-ifdef BUILD_VENV
-
 # Virtual env for current project
 # Handle clean of venv folder if something went wrong...
 $(PYTHON_VENV): $(PYTHON_VENV_DEPS)
@@ -31,39 +20,32 @@ $(PYTHON_VENV): $(PYTHON_VENV_DEPS)
 clean-venv:
 	$(CLEAN_STATUS) --lang python -s "Clean Python virtual environment" -- rm -Rf $(PYTHON_VENV)
 
-else  # !BUILD_VENV
-# In CI, but not building current project: don't build venv
-.PHONY: $(PYTHON_VENV)
-$(PYTHON_VENV) clean-venv: stub
-endif # !BUILD_VENV
-
 else # IS_PYTHON_PROJECT
 
 # If not in a Python project, venv is phony
 .PHONY: $(PYTHON_VENV)
 
 ifndef PROJECT_ROOT
+ifdef CI_PROJECT_ROOT
+# At workspace root, trigger venv build only in CI_PROJECT_ROOT
+BUILD_CI_VENV = 1
+endif # !CI_PROJECT
+endif # !PROJECT_ROOT
 
-ifdef CI
-CLEAN_VENV_STATUS := "Clean Python virtual environment for CI built project ($(CI_PROJECT))"
-BUILD_VENV_STATUS := "Update Python virtual environment for CI built project ($(CI_PROJECT))"
-else  # !CI
-CLEAN_VENV_STATUS := "Clean all Python virtual environments"
-BUILD_VENV_STATUS := "Update all Python virtual environments"
-endif # !CI
+ifdef BUILD_CI_VENV
 
-# At workspace root, trigger venv build for all projects
 clean-venv:
-	$(MULTI_STATUS) -s $(CLEAN_VENV_STATUS)
-	SUB_MAKE=1 $(REPO) forall -c "make $@"
+	$(MULTI_STATUS) -s "Clean Python virtual environment for CI built project ($(CI_PROJECT))"
+	SUB_MAKE=1 make -C $(CI_PROJECT_ROOT) $@
 $(PYTHON_VENV): $(SYSDEPS_TIME)
-	$(MULTI_STATUS) -s $(BUILD_VENV_STATUS)
-	SUB_MAKE=1 $(REPO) forall -c "make $@"
+	$(MULTI_STATUS) -s "Update Python virtual environment for CI built project ($(CI_PROJECT))"
+	SUB_MAKE=1 make -C $(CI_PROJECT_ROOT) $@
 
-else # !PROJECT_ROOT
+else # BUILD_CI_VENV
 
-# In a non-Python project, just stub venv targets
+# Other cases (non-Python project, or at workspace root but not in CI)
 $(PYTHON_VENV) clean-venv: stub
 
-endif # !PROJECT_ROOT
+endif # BUILD_CI_VENV
+
 endif # IS_PYTHON_PROJECT
