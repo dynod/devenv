@@ -10,7 +10,9 @@ ifdef IS_PYTHON_PROJECT
 # Handle clean of venv folder if something went wrong...
 $(PYTHON_VENV): $(PYTHON_VENV_DEPS)
 	export PYTHON_VENV_EXTRA_ARGS="$(PYTHON_VENV_EXTRA_ARGS)" && \
-	$(GIFT_STATUS) --lang python -s "Update Python virtual environment" -- $(HELPERS_ROOT)/setup-venv.sh \
+	export PROJECT_ROOT="$(PROJECT_ROOT)" && \
+	$(GIFT_STATUS) --lang python -s "Update Python virtual environment" && \
+	$(HELPERS_ROOT)/setup-venv.sh \
 		$(PYTHON_FOR_VENV) \
 		$(PYTHON_VENV) \
 		$(PYTHON_VENV_REQUIREMENTS) \

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# Helpers directory detection
+HELPERS_DIR=$(dirname $(readlink -f $0))
+
 # First arg is Python command to call to setup the venv
 PYTHON_FOR_VENV="$1"
 shift
@@ -20,9 +23,12 @@ for CANDIDATE in "$@"; do
     fi
 done
 
+# Status helper
+STATUS="${HELPERS_DIR}/status.py -p "${PROJECT_ROOT}" -t venv --lang python -i gift -s"
+
 # Prepare venv
 RC=0
-$PYTHON_FOR_VENV -m venv $PYTHON_VENV || RC=$?
+(${STATUS} "  * Setup venv folder" -- $PYTHON_FOR_VENV -m venv $PYTHON_VENV) || RC=$?
 if test "$RC" -ne 0; then
     echo "Cleaning corrupted $PYTHON_VENV folder"
     rm -Rf $PYTHON_VENV;
@@ -30,15 +36,17 @@ if test "$RC" -ne 0; then
 fi
 
 # Update pip first
-(source $PYTHON_VENV/bin/activate && pip install pip --upgrade)
+(source $PYTHON_VENV/bin/activate && ${STATUS} "  * Upgrade pip" -- pip install pip --upgrade)
 
 # Install dependencies first, if any, and if file exist
 PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
 if test -n "${DIST_LIST}"; then
+    ${STATUS} "  * Collect local builds:"
     for DIST in $DIST_LIST; do
+        ${STATUS} "    * ${DIST}"
         PIP_CMD="$PIP_CMD ${DIST}"
     done
-    (source $PYTHON_VENV/bin/activate && $PIP_CMD)
+    (source $PYTHON_VENV/bin/activate && ${STATUS} "  * Resolve local builds" -- $PIP_CMD)
 fi
 
 # Finaly finish setup by doing pip installs
@@ -46,5 +54,5 @@ PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
 for DEPFILE in $REQS_LIST; do
     PIP_CMD="$PIP_CMD -r $DEPFILE"
 done
-(source $PYTHON_VENV/bin/activate && $PIP_CMD)
+(source $PYTHON_VENV/bin/activate && ${STATUS} "  * Resolve requirements" -- $PIP_CMD)
 touch $PYTHON_VENV
