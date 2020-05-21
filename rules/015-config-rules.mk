@@ -17,3 +17,39 @@ $(PYTHON_SETUP): $(PYTHON_MAIN_REQUIREMENTS)
 endif
 
 endif # IS_PYTHON_PROJECT
+
+# Simple project
+ifdef PROJECT_ROOT
+
+# Generate VS Code files
+config: $(VSCODE_P_SETTINGS) $(VSCODE_P_LAUNCH)
+
+# VS Code settings
+$(VSCODE_P_SETTINGS): $(VS_CODE_SETTINGS_DEPS)
+	$(TOOLBOX_STATUS) -t config -s "Generate VS Code settings file" -- $(SETTINGS_BUILDER) -o $@ $(VS_CODE_SETTINGS_DEPS)
+
+# VS Code launch
+$(VSCODE_P_LAUNCH): $(VS_CODE_LAUNCH_DEPS)
+	$(TOOLBOX_STATUS) -t config -s "Generate VS Code launch file" -- $(SETTINGS_BUILDER) -o $@ $(VS_CODE_LAUNCH_DEPS)
+
+else # PROJECT_ROOT
+
+ifdef CI_PROJECT_ROOT
+# At workspace root, trigger config build only in CI_PROJECT_ROOT
+BUILD_CI_VENV = 1
+endif # !CI_PROJECT_ROOT
+
+ifdef BUILD_CI_VENV
+
+config:
+	$(MULTI_STATUS) -s "Generate config files for CI built project ($(CI_PROJECT))"
+	SUB_MAKE=1 make -C $(CI_PROJECT_ROOT) $@
+
+else # BUILD_CI_VENV
+
+# Other cases (at workspace root but not in CI)
+config: stub
+
+endif # BUILD_CI_VENV
+
+endif # PROJECT_ROOT

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Helper script to build settings files
-
+import json
 import os
 import re
 import subprocess
@@ -85,7 +85,7 @@ class SettingsBuilder(ABC):
 
 
 # Setting builder for setup.cfg
-class SetupCfgSettingBuilder(SettingsBuilder):
+class SetupCfgSettingsBuilder(SettingsBuilder):
     def build_layers(self):
         # Load files per layers
         c = ConfigParser()
@@ -100,16 +100,52 @@ class SetupCfgSettingBuilder(SettingsBuilder):
             c.write(f)
 
 
+# Setting builder for VS Code settings.json
+class SettingsJsonSettingsBuilder(SettingsBuilder):
+    def build_layers(self):
+        # Add to json model per layers
+        model = {}
+        for f_path in self.settings:
+            if f_path.exists():
+                with f_path.open("r") as f:
+                    # Load new model fragment
+                    m_fragment = json.load(f)
+
+                # Iterate on new fragments items
+                for k, v in m_fragment.items():
+                    # Already exists in target model?
+                    if k in model:
+                        # List: extend
+                        if isinstance(v, list):
+                            model[k].extend(v)
+                        # Map: update
+                        elif isinstance(v, dict):
+                            model[k].update(v)
+                        # Otherwise: replace
+                        else:
+                            model[k] = v
+                    else:
+                        # New key
+                        model[k] = v
+
+        # Write to output file
+        self.gen_file.parent.mkdir(parents=True, exist_ok=True)
+        with self.gen_file.open("w") as f:
+            json.dump(model, f, indent=4)
+
+
 # Resolution map
 SETUP_CFG = "setup.cfg"
-SETTING_BUILDERS_MAP = {SETUP_CFG: SetupCfgSettingBuilder}
+SETTINGS_JSON = "settings.json"
+LAUNCH_JSON = "launch.json"
+SETTING_BUILDERS_MAP = {SETUP_CFG: SetupCfgSettingsBuilder, SETTINGS_JSON: SettingsJsonSettingsBuilder, LAUNCH_JSON: SettingsJsonSettingsBuilder}
 
 
 # Main function
 def main(args: list) -> int:
     # Parse args
     parser = ArgumentParser(description="Helper script for settings files build")
-    parser.add_argument("settings", nargs=ONE_OR_MORE, type=Path, help="Path settings to be merged")
+    parser.add_argument("settings", nargs=ONE_OR_MORE, type=Path, help="Path to settings files to be merged")
     parser.add_argument("-o", "--output", type=Path, required=True, help="Path to output settings file")
     args = parser.parse_args(args)
 

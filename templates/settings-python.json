@@ -1,0 +1,26 @@
+{
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "files.watcherExclude": {
+        "**/{{PYTHON_VENV}}/**": true
+    },
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--ignore=E501,E203,W503"
+    ],
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "-l",
+        "160"
+    ],
+    "python.pythonPath": "{{PYTHON_VENV}}/bin/python",
+    "python.autoComplete.extraPaths": [
+        "{{SRC_FOLDER}}"
+    ],
+    "python.workspaceSymbols.rebuildOnFileSave": true
+}
