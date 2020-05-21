@@ -31,6 +31,9 @@ PYTHON_SETUP := $(PROJECT_ROOT)/setup.cfg
 # Need at least basic settings (flake8, isort, ...) in setup
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup.cfg
 
+# Contribute to VS Code settings as well
+VS_CODE_SETTINGS_DEPS += $(PYTHON_DEVENV_TEMPLATES)/settings-python.json
+
 # Setup executable file (+template)
 PYTHON_SETUP_EXE := $(PROJECT_ROOT)/setup.py
 PYTHON_SETUP_TEMPLATE := $(PYTHON_DEVENV_TEMPLATES)/setup.py

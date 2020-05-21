@@ -1,9 +1,5 @@
 {
-    "python.pythonPath": "venv/bin/python",
-    "python.autoComplete.extraPaths": [
-        "src"
-    ],
-    "python.testing.pytestEnabled": true,
+    "editor.formatOnSave": true,
     "cSpell.words": [
         "DEPS",
         "MFLAGS",
@@ -14,16 +10,26 @@
         "datefmt",
         "devenv",
         "dynod",
+        "ifdef",
         "isort",
+        "mkdir",
         "msecs",
         "nargs",
         "noqa",
         "noreqs",
+        "proto",
+        "pylint",
         "pytest",
         "pyvenv",
+        "sdist",
         "strftime",
         "sysdeps",
         "toxml",
         "venv"
-    ]
+    ],
+    "cSpell.enableFiletypes": [
+        "makefile",
+        "proto3"
+    ],
+    "cSpell.allowCompoundWords": true
 }

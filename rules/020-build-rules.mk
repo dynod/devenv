@@ -3,6 +3,12 @@
 # All in one target
 .PHONY: build
 
+# Not in workspace
+ifdef PROJECT_ROOT
+
+# Needs at least config to be done
+build: config
+
 # Python project
 ifdef IS_PYTHON_PROJECT
 
@@ -44,3 +50,4 @@ $(PYTHON_SETUP_EXE): $(PYTHON_SETUP_TEMPLATE)
 endif # PYTHON_DISTRIBUTION
 
 endif # IS_PYTHON_PROJECT
+endif # PROJECT_ROOT

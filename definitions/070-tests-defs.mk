@@ -16,6 +16,9 @@ ifneq ($(TEST_FILES),)
 # Add test configuration in setup
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-test.cfg
 
+# Contribute to VS Code settings as well
+VS_CODE_SETTINGS_DEPS += $(PYTHON_DEVENV_TEMPLATES)/settings-python-tests.json
+
 ifdef IS_CODEGEN_PROJECT
 # Some stuff needs to be ignored in the settings (because in generated code)
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-test-codegen.cfg
