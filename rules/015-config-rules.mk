@@ -21,16 +21,25 @@ endif # IS_PYTHON_PROJECT
 # Simple project
 ifdef PROJECT_ROOT
 
-# Generate VS Code files
-config: $(VSCODE_P_SETTINGS) $(VSCODE_P_LAUNCH)
+ifneq ($(VS_CODE_SETTINGS_DEPS),)
+
+config: $(VSCODE_P_SETTINGS)
 
 # VS Code settings
 $(VSCODE_P_SETTINGS): $(VS_CODE_SETTINGS_DEPS)
 	$(TOOLBOX_STATUS) -t config -s "Generate VS Code settings file" -- $(SETTINGS_BUILDER) -o $@ $(VS_CODE_SETTINGS_DEPS)
 
+endif # VS_CODE_SETTINGS_DEPS
+
+ifneq ($(VS_CODE_LAUNCH_DEPS),)
+
 # VS Code launch
+config: $(VSCODE_P_LAUNCH)
+
 $(VSCODE_P_LAUNCH): $(VS_CODE_LAUNCH_DEPS)
 	$(TOOLBOX_STATUS) -t config -s "Generate VS Code launch file" -- $(SETTINGS_BUILDER) -o $@ $(VS_CODE_LAUNCH_DEPS)
+
+endif # VS_CODE_LAUNCH_DEPS
 
 else # PROJECT_ROOT
 
