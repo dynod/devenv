@@ -11,6 +11,7 @@
         "devenv",
         "dynod",
         "ifdef",
+        "ifneq",
         "isort",
         "mkdir",
         "msecs",
