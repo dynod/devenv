@@ -4,8 +4,11 @@
 ifdef PROJECT_ROOT
 ifdef DOCKER_IMAGE_NAME
 
-# All Dockerfiles
-DOCKERFILE := $(wildcard $(PROJECT_ROOT)/Dockerfile)
+# Context folder
+DOCKER_CONTEXT ?= $(PROJECT_ROOT)
+
+# Dockerfile from context
+DOCKERFILE := $(wildcard $(DOCKER_CONTEXT)/Dockerfile)
 
 ifneq ($(DOCKERFILE),)
 # This is a Docker project
@@ -14,11 +17,12 @@ endif
 
 ifdef IS_DOCKER_PROJECT
 
-# Docker context dependencies is... well... the whole project
-DOCKER_CONTEXT := $(shell find $(PROJECT_ROOT) -type f)
+# Docker context dependencies from context folder
+DOCKER_CONTEXT_FILES := $(shell find $(DOCKER_CONTEXT) -type f)
 
-# All Docker images time files
+# Docker image build/push time files
 DOCKERTIME := $(CACHE_DIR)/dockerimage.time
+DOCKERPUSHTIME := $(CACHE_DIR)/dockerpush.time
 
 endif # IS_DOCKER_PROJECT
 endif # DOCKER_IMAGE_NAME

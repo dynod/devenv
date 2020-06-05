@@ -20,8 +20,12 @@ OUTPUT_ROOT ?= $(PROJECT_ROOT)/out
 # Artifacts folder
 ARTIFACTS_ROOT ?= $(OUTPUT_ROOT)/artifacts
 
-# Version
-VERSION ?= $(shell $(HELPERS_ROOT)/scm-version.sh)
+# Version from SCM
+GIT_VERSION ?= $(shell $(HELPERS_ROOT)/scm-version.sh)
+
+# Turn it in the Python way
+# See https://www.python.org/dev/peps/pep-0440/
+VERSION ?= $(shell echo "$(GIT_VERSION)" | sed -e "s/\(.*\)-\([0-9]*\)-\(.*\)/\1.post\2+\3/")
 
 # Prepare to touch version file if version changed
 VERSION_NEW_TIME := $(CACHE_DIR)/new_version.time
