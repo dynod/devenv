@@ -50,6 +50,7 @@ FILE_STATUS = $(STATUS) -i file
 LIPSTICK_STATUS = $(STATUS) -i lipstick
 INSTALL_STATUS = $(STATUS) -i install
 TOOLBOX_STATUS = $(STATUS) -i toolbox
+FILEBOX_STATUS = $(STATUS) -i filebox
 
 # Helper for system dependencies
 SYSDEPS_HELPER = $(HELPERS_ROOT)/sysdeps.py $(HELPER_OPTS)
