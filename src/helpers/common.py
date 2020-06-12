@@ -7,10 +7,11 @@ from enum import Enum
 from pathlib import Path
 
 
-# Language names
+# "Language" names (also used to choose a packaging type)
 class Language(Enum):
     PYTHON = "python"
     DOCKER = "docker"
+    LINUX = "linux"
 
 
 # Icon names
@@ -38,6 +39,7 @@ class Icon(Enum):
     INSTALL = "install"
     TOOLBOX = "toolbox"
     FILEBOX = "filebox"
+    PENGUIN = "penguin"
 
 
 # Map icons enum to real icons
@@ -65,6 +67,7 @@ ICONS = {
     Icon.INSTALL: "\U0001F4E5",
     Icon.TOOLBOX: "\U0001F9F0",
     Icon.FILEBOX: "\U0001F5C3",
+    Icon.PENGUIN: "\U0001F427",
 }
 
 
@@ -89,7 +92,7 @@ class Styles:
 LVL_STYLES = {Level.INFO: Styles.RESET, Level.WARNING: Styles.YELLOW, Level.ERROR: Styles.RED}
 
 # Map languages to icons
-LANG_ICONS = {Language.PYTHON: Icon.SNAKE, Language.DOCKER: Icon.WHALE}
+LANG_ICONS = {Language.PYTHON: Icon.SNAKE, Language.DOCKER: Icon.WHALE, Language.LINUX: Icon.PENGUIN}
 
 
 # Get current timestamp string

@@ -7,7 +7,7 @@ PYTHON_SETTINGS := $(DEVENV)/python
 ALL_PYTHON_SHARED_SETTINGS := $(foreach P,$(PROJECTS),$(P)/$(PYTHON_SETTINGS)/shared)
 
 # Various templates coming from devenv
-PYTHON_DEVENV_TEMPLATES := $(DEVENV_ROOT)/templates
+PYTHON_DEVENV_TEMPLATES := $(DEVENV_TEMPLATES)/python
 
 # Project specific defs
 ifdef PROJECT_ROOT

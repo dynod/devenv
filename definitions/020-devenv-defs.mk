@@ -2,6 +2,9 @@
 
 DEVENV := .devenv
 
+# Templates shared folder
+DEVENV_TEMPLATES := $(DEVENV_ROOT)/templates
+
 # Project specific defs
 ifdef PROJECT_ROOT
 

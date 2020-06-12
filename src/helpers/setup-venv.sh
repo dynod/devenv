@@ -24,7 +24,7 @@ for CANDIDATE in "$@"; do
 done
 
 # Status helper
-STATUS="${HELPERS_DIR}/status.py -p "${PROJECT_ROOT}" -t venv --lang python -i gift -s"
+STATUS="${HELPERS_DIR}/status.py -p "${PROJECT_ROOT}" -t ${SETUP_VENV_TARGET:-venv} --lang python -i gift -s"
 
 # Prepare venv
 RC=0
@@ -41,18 +41,20 @@ fi
 # Install dependencies first, if any, and if file exist
 PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
 if test -n "${DIST_LIST}"; then
-    ${STATUS} "  * Collect local builds:"
+    ${STATUS} "  * Collect builds:"
     for DIST in $DIST_LIST; do
         ${STATUS} "    * ${DIST}"
         PIP_CMD="$PIP_CMD ${DIST}"
     done
-    (source $PYTHON_VENV/bin/activate && ${STATUS} "  * Resolve local builds" -- $PIP_CMD)
+    (source $PYTHON_VENV/bin/activate && ${STATUS} "  * Resolve builds" -- $PIP_CMD)
 fi
 
 # Finaly finish setup by doing pip installs
-PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
-for DEPFILE in $REQS_LIST; do
-    PIP_CMD="$PIP_CMD -r $DEPFILE"
-done
-(source $PYTHON_VENV/bin/activate && ${STATUS} "  * Resolve requirements" -- $PIP_CMD)
+if test -n "$REQS_LIST"; then
+    PIP_CMD="pip install ${PYTHON_VENV_EXTRA_ARGS}"
+    for DEPFILE in $REQS_LIST; do
+        PIP_CMD="$PIP_CMD -r $DEPFILE"
+    done
+    (source $PYTHON_VENV/bin/activate && ${STATUS} "  * Resolve requirements" -- $PIP_CMD)
+fi
 touch $PYTHON_VENV

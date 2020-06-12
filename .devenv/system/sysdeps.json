@@ -1,5 +1,11 @@
 {
     "/usr/share/doc/python3-venv": {
         "apt": "python3-venv"
+    },
+    "debuild": {
+        "apt": "devscripts"
+    },
+    "dh": {
+        "apt": "debhelper"
     }
 }
