@@ -6,6 +6,6 @@ DISPLAY_VALUES := $(foreach V,$(DISPLAY_MAKEFILE_VAR),$($(V)))
 
 .PHONY: display
 display:
-	echo $(DISPLAY_VALUES)
+	echo "$(DISPLAY_VALUES)"
 
 endif # DISPLAY_MAKEFILE_VAR

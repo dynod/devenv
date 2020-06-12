@@ -89,8 +89,9 @@ class TestSetupCfgBuilder(TestSettingsBuilderHelper):
         assert self.built_setup.get("dummy", "foo") == "other"
         assert self.built_setup.get("dummy", "other") == "1,2,3"
 
-    def test_setup_unknown_pattern(self):
-        # Test with file containing an unknown pattern
+    def test_setup_unknown_pattern(self, monkeypatch):
+        # Test with file containing an unknown pattern, and fake make return
+        monkeypatch.setattr(subprocess, "run", lambda _, env, stdout: FakeCP(0))
         assert self.run_builder(SETUP_CFG, [self.setup_resources / "unknown_pattern.cfg"]) == 1
 
     def test_setup_make_error(self, monkeypatch):
