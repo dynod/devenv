@@ -30,7 +30,7 @@ class TestSettingsBuilderHelper(TestHelpers):
 
     @property
     def templates(self) -> Path:
-        return self.root_folder / "templates"
+        return self.root_folder / "templates" / "python"
 
 
 class TestUnknownFormat(TestSettingsBuilderHelper):
