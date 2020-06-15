@@ -62,7 +62,9 @@ fi
 cp -a "$SKEL_FOLDER"/* "$WORKING_FOLDER/"
 
 # Dist and resource files
-cp -a $DIST_FILES "$WORKING_FOLDER/dist"
+if test -n "$DIST_FILES"; then
+	cp -a $DIST_FILES "$WORKING_FOLDER/dist"
+fi
 cp -a "$RES_FOLDER"/* "$WORKING_FOLDER/"
 
 # Copy debian skel and update templates
