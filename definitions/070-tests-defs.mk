@@ -13,6 +13,9 @@ FLAKE_REPORT := $(FLAKE_ROOT)/index.html
 # Something to test
 ifneq ($(TEST_FILES),)
 
+# Default count of parallel test processes: auto (== CPU count)
+PYTEST_NUM_PROCESSES ?= auto
+
 # Add test configuration in setup
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-test.cfg
 
