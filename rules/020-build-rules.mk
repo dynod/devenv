@@ -50,4 +50,25 @@ $(PYTHON_SETUP_EXE): $(PYTHON_SETUP_TEMPLATE)
 endif # PYTHON_DISTRIBUTION
 
 endif # IS_PYTHON_PROJECT
+
+# Java project
+ifdef IS_JAVA_PROJECT
+
+# Gradle build
+.PHONY: jar
+build: jar
+jar:
+	$(BUILD_STATUS) --lang java -s "Delegate build to gradle"
+	$(PROJECT_ROOT)/gradlew jar
+
+# Java library artifact
+ifdef JAVA_LIB
+build: $(JAVA_LIB)
+$(JAVA_LIB): $(JAVA_BUILT_LIB) jar
+	mkdir -p $(JAVA_ARTIFACTS)
+	cp -p $(JAVA_BUILT_LIB) $(JAVA_LIB)
+endif # JAVA_LIB
+
+endif # IS_JAVA_PROJECT
+
 endif # PROJECT_ROOT

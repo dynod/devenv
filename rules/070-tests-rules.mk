@@ -23,3 +23,16 @@ $(TEST_TIME):
 endif # TEST_REPORT
 
 endif # IS_PYTHON_PROJECT
+
+# Java project?
+ifdef IS_JAVA_PROJECT
+
+# Add test target
+.PHONY: tests
+tests: build gradle-tests
+.PHONY: gradle-tests
+gradle-tests:
+	$(CROSS_FINGER_STATUS) -t tests --lang java -s "Delegate tests to gradle"
+	$(PROJECT_ROOT)/gradlew test
+
+endif # IS_JAVA_PROJECT
