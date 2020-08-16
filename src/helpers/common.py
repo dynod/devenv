@@ -12,6 +12,7 @@ class Language(Enum):
     PYTHON = "python"
     DOCKER = "docker"
     LINUX = "linux"
+    JAVA = "java"
 
 
 # Icon names
@@ -40,6 +41,7 @@ class Icon(Enum):
     TOOLBOX = "toolbox"
     FILEBOX = "filebox"
     PENGUIN = "penguin"
+    COFFEE = "coffee"
 
 
 # Map icons enum to real icons
@@ -68,6 +70,7 @@ ICONS = {
     Icon.TOOLBOX: "\U0001F9F0",
     Icon.FILEBOX: "\U0001F5C3",
     Icon.PENGUIN: "\U0001F427",
+    Icon.COFFEE: "\U0001F375",
 }
 
 
@@ -92,7 +95,7 @@ class Styles:
 LVL_STYLES = {Level.INFO: Styles.RESET, Level.WARNING: Styles.YELLOW, Level.ERROR: Styles.RED}
 
 # Map languages to icons
-LANG_ICONS = {Language.PYTHON: Icon.SNAKE, Language.DOCKER: Icon.WHALE, Language.LINUX: Icon.PENGUIN}
+LANG_ICONS = {Language.PYTHON: Icon.SNAKE, Language.DOCKER: Icon.WHALE, Language.LINUX: Icon.PENGUIN, Language.JAVA: Icon.COFFEE}
 
 
 # Get current timestamp string
@@ -175,7 +178,7 @@ def capture_cmd(args, cmd, stamp=None) -> int:
         # Something went wrong?
         if rc != 0:
             # Print sub-process outputs
-            pretty_print(get_stamp(), Icon.ERROR, name, target, Level.ERROR, f"!!! ERROR !!!")
+            pretty_print(get_stamp(), Icon.ERROR, name, target, Level.ERROR, "!!! ERROR !!!")
             for f in [out_f, err_f]:
                 if f.exists():
                     print(f">>> {f} >>>")

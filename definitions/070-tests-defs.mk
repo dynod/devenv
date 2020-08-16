@@ -38,3 +38,11 @@ TEST_TIME := $(CACHE_DIR)/tests.time
 endif # TEST_FILES
 
 endif # IS_PYTHON_PROJECT
+
+# Java project?
+ifdef IS_JAVA_PROJECT
+
+# All Java test files
+JAVA_TEST_FILES := $(shell find $(JAVA_TEST_FOLDER) -name '*.java' 2>/dev/null)
+
+endif # IS_JAVA_PROJECT
