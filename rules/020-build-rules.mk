@@ -59,7 +59,7 @@ ifdef IS_JAVA_PROJECT
 build: jar
 jar:
 	$(BUILD_STATUS) --lang java -s "Delegate build to gradle"
-	$(PROJECT_ROOT)/gradlew jar
+	$(PROJECT_ROOT)/gradlew $(GRADLE_BUILD_TARGET)
 
 # Java library artifact
 ifdef JAVA_LIB
