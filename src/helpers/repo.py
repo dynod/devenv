@@ -171,7 +171,6 @@ class RepoHandler:
 
         # Will create workspace tag
         workspace_tag = current_n + "-" + last_tag
-        workspace_project = self.project_by_name("workspace")
 
         # Iterate on all manifest projects
         to_remove = []
@@ -197,10 +196,18 @@ class RepoHandler:
             self.manifest.removeChild(p)
 
         # Serialize updated manifest
-        release_manifest = self.workspace_root / Path(self.project_path(workspace_project)) / "tags" / current_n / f"{last_tag}.xml"
+        workspace_project = self.workspace_root / Path(self.project_path(self.project_by_name("workspace")))
+        release_manifest_name = f"tags/{current_n}/{last_tag}.xml"
+        release_manifest = workspace_project / release_manifest_name
         release_manifest.parent.mkdir(parents=True, exist_ok=True)
         with release_manifest.open("w") as f:
             f.write(self.dom.toxml())
+
+        # Commit & tag
+        subprocess.check_call(["git", "add", release_manifest_name], cwd=workspace_project)
+        subprocess.check_call(["git", "commit", "-m", f"Add release manifest for {current_n} {last_tag}"], cwd=workspace_project)
+        subprocess.check_call(["git", "tag", workspace_tag, "master"], cwd=workspace_project)
+
         return f"Generated release manifest: {release_manifest}"
 
     def checkout_project(self, args: Namespace):
