@@ -80,6 +80,7 @@ class TestRepoHelperMisc(TestRepoHelper):
     def test_release_manifest_missing_tags(self, cd_project_api, monkeypatch):
         # Patch subprocess to fake the git call
         monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: "".encode("utf-8"))
+        monkeypatch.setattr(subprocess, "check_call", lambda _, cwd: None)
 
         # Generate a release manifest
         workspace = self.repo.parent.resolve() / ".workspace"
@@ -92,6 +93,7 @@ class TestRepoHelperMisc(TestRepoHelper):
     def test_release_manifest_ok(self, cd_project_api, monkeypatch):
         # Patch subprocess to fake the git call
         monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: ("1.2\n2.3" if cwd.name == "api" else "4.5\n6.7").encode("utf-8"))
+        monkeypatch.setattr(subprocess, "check_call", lambda _, cwd: None)
 
         # Generate a release manifest
         workspace = self.repo.parent.resolve() / ".workspace"
