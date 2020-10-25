@@ -9,9 +9,13 @@ TEST_FILES := $(shell find $(TEST_FOLDER) -name '*.py' 2>/dev/null)
 # Flake8 report
 FLAKE_ROOT := $(OUTPUT_ROOT)/flake-report
 FLAKE_REPORT := $(FLAKE_ROOT)/index.html
+FLAKE_INPUT := $(SRC_FOLDER)
 
 # Something to test
 ifneq ($(TEST_FILES),)
+
+# Also analyse test files
+FLAKE_INPUT += $(TEST_FOLDER)
 
 # Default count of parallel test processes: auto (== CPU count)
 PYTEST_NUM_PROCESSES ?= auto
