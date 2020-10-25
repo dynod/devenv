@@ -29,7 +29,7 @@ build: flake8
 $(FLAKE_REPORT): $(PYTHON_VENV) $(PYTHON_SETUP) $(SRC_FILES) $(TEST_FILES)
 	rm -Rf $(FLAKE_ROOT)
 	mkdir -p $(FLAKE_ROOT)
-	$(IN_PYTHON_VENV) $(EYE_STATUS) -t flake8 --lang python -s "Analyze Python code" -- flake8 $(SRC_FOLDER) $(TEST_FOLDER)
+	$(IN_PYTHON_VENV) $(EYE_STATUS) -t flake8 --lang python -s "Analyze Python code" -- flake8 $(FLAKE_INPUT)
 
 ifdef PYTHON_DISTRIBUTION
 

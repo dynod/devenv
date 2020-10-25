@@ -20,6 +20,7 @@
         "noqa",
         "noreqs",
         "proto",
+        "protos",
         "pycache",
         "pylint",
         "pytest",
