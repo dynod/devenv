@@ -16,7 +16,8 @@ $(PYTHON_GEN_FOLDER)/%_pb2.py: $(PROTO_FOLDER)/$(PROTO_PACKAGE)/%.proto
 # For package init
 $(PYTHON_GEN_INIT):
 	mkdir -p $(PYTHON_GEN_FOLDER)
-	touch $(PYTHON_GEN_INIT)
+	echo "# Public generated API" > $(PYTHON_GEN_INIT)
+	for package in $(PYTHON_GEN_PACKAGES); do echo "from $$package import * # NOQA: F401,F403" >> $(PYTHON_GEN_INIT); done
 
 endif # IS_PYTHON_PROJECT
 endif # IS_CODEGEN_PROJECT
