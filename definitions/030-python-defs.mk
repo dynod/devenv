@@ -70,6 +70,9 @@ PYTHON_GEN_FILES := \
 	$(foreach PROTO,$(PROTO_FILES),$(SRC_FOLDER)/$(subst $(PROTO_FOLDER)/,,$(subst .proto,,$(PROTO)))_pb2.py) \
 	$(PYTHON_GEN_INIT)
 
+# List Python generated packages
+PYTHON_GEN_PACKAGES := $(foreach PROTO,$(PROTO_FILES),$(subst /,.,$(subst $(PROTO_FOLDER)/,,$(subst .proto,,$(PROTO)))_pb2))
+
 # Some stuff needs to be ignored in the settings
 PYTHON_SETUP_DEPS += $(PYTHON_DEVENV_TEMPLATES)/setup-flake-codegen.cfg
 
