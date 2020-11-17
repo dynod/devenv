@@ -25,6 +25,7 @@
         "noqa",
         "noreqs",
         "proto",
+        "protobuf",
         "protoc",
         "protos",
         "pycache",
