@@ -151,11 +151,24 @@ class RepoHandler:
 
         return f"Generated branch manifest: {branch_manifest}"
 
+    def tag_pad(self, tag: str, max_pad: int = 3):
+        # Pad with zeroes tag segments
+        out = ""
+        for segment in tag.split("."):
+            if len(segment) > max_pad:
+                raise RuntimeError(f'Tag segment "{segment}" is longer than configured max ({max_pad})')
+            if len(out):
+                out += "."
+            pad_len = max_pad - len(segment)
+            out += ("0" * pad_len) + segment
+        return out
+
     def project_last_tag(self, project):
         # Get latest tag for this project
         tags = str(subprocess.check_output(["git", "tag", "-l"], cwd=self.workspace_root / Path(self.project_path(project))), encoding="utf-8").splitlines()
         if len(tags) == 0:
             raise RuntimeError(f"No tags found for project {self.project_name(project)}")
+        tags.sort(key=self.tag_pad)
         return tags[len(tags) - 1]
 
     def generate_release_manifest(self, args: Namespace):
