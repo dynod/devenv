@@ -90,6 +90,26 @@ class TestRepoHelperMisc(TestRepoHelper):
         except RuntimeError as e:
             assert "No tags found for project api" in str(e)
 
+    def test_get_latest_tag(self, cd_project_api, monkeypatch):
+        # Patch subprocess to fake the git call
+        r = RepoHandler(self.repo)
+
+        # Easy with ordered tags
+        monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: ("1.2\n2.3").encode("utf-8"))
+        assert r.project_last_tag(r.current_project) == "2.3"
+
+        # Harder, with sub-segments logic
+        monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: ("1.1\n1.10\n1.2\n1.3").encode("utf-8"))
+        assert r.project_last_tag(r.current_project) == "1.10"
+
+        # Error case, with "too long" segment
+        monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: ("1.1\n1.1234").encode("utf-8"))
+        try:
+            r.project_last_tag(r.current_project)
+            raise AssertionError("Shouldn't get here")
+        except RuntimeError as e:
+            assert str(e) == 'Tag segment "1234" is longer than configured max (3)'
+
     def test_release_manifest_ok(self, cd_project_api, monkeypatch):
         # Patch subprocess to fake the git call
         monkeypatch.setattr(subprocess, "check_output", lambda _, cwd: ("1.2\n2.3" if cwd.name == "api" else "4.5\n6.7").encode("utf-8"))
