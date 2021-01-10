@@ -119,7 +119,7 @@ class TestRepoHelperMisc(TestRepoHelper):
         workspace = self.repo.parent.resolve() / ".workspace"
         expected_release = workspace / "tags" / "api" / "2.3.xml"
         assert not expected_release.exists()
-        self.call_repo(["--release-manifest", "-d", str(workspace / "deps.json")]) == f"Generated release manifest: {expected_release}"
+        assert self.call_repo(["--release-manifest", "-d", str(workspace / "deps.json")]) == f"Generated release manifest: {expected_release}"
         assert expected_release.exists()
 
         # Verify updated branch

@@ -72,7 +72,10 @@ class RepoHandler:
         return next(filter(lambda p: self.project_name(p) == name, self.projects))
 
     def project_by_path(self, path: str) -> minidom.Node:
-        return next(filter(lambda p: self.project_path(p) == path, self.projects))
+        try:
+            return next(filter(lambda p: self.project_path(p) == path, self.projects))
+        except StopIteration:  # pragma: no cover
+            return None
 
     @property
     def groups(self) -> set:

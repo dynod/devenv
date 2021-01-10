@@ -1,7 +1,7 @@
 # Some definitions for Python virtual environment setup
 
 # Virtual env path
-PYTHON_VENV := venv
+PYTHON_VENV ?= venv
 
 # Only if current project is a Python one
 ifdef IS_PYTHON_PROJECT
