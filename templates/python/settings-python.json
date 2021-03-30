@@ -11,7 +11,7 @@
     "python.linting.pylintEnabled": false,
     "python.linting.flake8Enabled": true,
     "python.linting.flake8Args": [
-        "--ignore=E501,E203,W503"
+        "--ignore=E501,E203,W503,B902"
     ],
     "python.formatting.provider": "black",
     "python.formatting.blackArgs": [
