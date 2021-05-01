@@ -1,0 +1,10 @@
+{
+    "protoc": {
+        "compile_on_save": true,
+        "options": [
+            "{{PROTO_DEPS_OPTIONS}}",
+            "--proto_path={{PROTO_FOLDER}}",
+            "--python_out=/tmp"
+        ]
+    }
+}

@@ -2,7 +2,11 @@
 ifdef DISPLAY_MAKEFILE_VAR
 
 # Variable values
+ifdef WITH_VALUE_SEPARATORS
+DISPLAY_VALUES := $(foreach V,$(DISPLAY_MAKEFILE_VAR),@<@$($(V))@>@)
+else
 DISPLAY_VALUES := $(foreach V,$(DISPLAY_MAKEFILE_VAR),$($(V)))
+endif
 
 .PHONY: display
 display:

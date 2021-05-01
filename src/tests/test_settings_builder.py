@@ -164,3 +164,9 @@ class TestSettingsJsonBuilder(TestSettingsBuilderHelper):
         expected_keys.extend(self.devenv_json_model.keys())
         self.check_model(expected_keys)
         assert not self.built_json_model["other_key"]
+
+    def test_settings_json_workspace_sub_folder(self):
+        # Generate with workspace reference
+        assert self.run_builder(SETTINGS_JSON, [self.settings_resources / "workspace_ref.json"]) == 0
+        self.check_model(["some_key"])
+        assert "${workspaceFolder}" in self.built_json_model["some_key"]
