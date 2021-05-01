@@ -12,6 +12,14 @@ PYTHON_FOR_VENV ?= python3
 # List project requirements files + shared ones
 PYTHON_VENV_REQUIREMENTS := $(shell find $(ALL_PYTHON_SHARED_SETTINGS) $(PYTHON_PROJECT_SETTINGS) -maxdepth 1 -name '*.txt' 2> /dev/null)
 
+# If code generation required?
+ifdef IS_CODEGEN_PROJECT
+
+# Add tooling requirements for code generation
+PYTHON_VENV_REQUIREMENTS += $(CODEGEN_DEVENV_TEMPLATES)/requirements-codegen.txt
+
+endif # IS_CODEGEN_PROJECT
+
 # Run command in venv
 IN_PYTHON_VENV := source $(PYTHON_VENV)/bin/activate && 
 
