@@ -6,10 +6,14 @@ import os
 import re
 import subprocess
 import sys
+import traceback
 from abc import ABC, abstractmethod
 from argparse import ONE_OR_MORE, ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
+
+# Pattern matching for output values
+MAKE_VALUES_PATTERN = re.compile("@<@(.*?)@>@")
 
 
 # Abstract API for settings builders
@@ -40,16 +44,24 @@ class SettingsBuilder(ABC):
             for make_var in list(filter(lambda n: n.startswith("MAKE") or n == "MFLAGS", env.keys())):
                 del env[make_var]
             pattern_str = " ".join(patterns)
-            env.update({"SUB_MAKE": "1", "DISPLAY_MAKEFILE_VAR": pattern_str})
+            env.update({"SUB_MAKE": "1", "DISPLAY_MAKEFILE_VAR": pattern_str, "WITH_VALUE_SEPARATORS": "1"})
 
-            # Get values from makefile
+            # Run make
             cp = subprocess.run(["make", "display"], env=env, stdout=subprocess.PIPE)
             if cp.returncode != 0:
                 raise RuntimeError("Unexpected error while running make display for patterns: " + pattern_str)
             out = cp.stdout.decode("utf-8").rstrip("\n")
-            values = out.split(" ")
-            if len(patterns) != len(values):
-                raise RuntimeError(f"Unexpected mismatch between values ({out}) and patterns ({pattern_str})")
+
+            # Process output
+            values = []
+            pos = 0
+            while pos >= 0:
+                m = MAKE_VALUES_PATTERN.search(out, pos)
+                if m is not None:
+                    values.append(m.group(1))
+                    pos = m.end()
+                else:
+                    pos = -1
 
             # Replace in content
             cwd = Path(os.getcwd())
@@ -64,7 +76,7 @@ class SettingsBuilder(ABC):
                 # Handle paths
                 p = Path(value)
                 if p.is_absolute() and cwd in p.parents:
-                    value = str(p.relative_to(cwd))
+                    value = self.get_cwd_prefix() + str(p.relative_to(cwd))
 
                 # Process
                 content = content.replace("{{" + patterns[index] + "}}", value)
@@ -82,6 +94,10 @@ class SettingsBuilder(ABC):
             out.add(m.group(1))
             m = p.search(content, m.end())
         return list(out)
+
+    def get_cwd_prefix(self) -> str:
+        # Prefix for current project folder in settings
+        return ""
 
 
 # Setting builder for setup.cfg
@@ -133,6 +149,10 @@ class SettingsJsonSettingsBuilder(SettingsBuilder):
         with self.gen_file.open("w") as f:
             json.dump(model, f, indent=4)
 
+    def get_cwd_prefix(self) -> str:
+        # Prefix for current project folder in settings
+        return "${workspaceFolder}/"
+
 
 # Resolution map
 SETUP_CFG = "setup.cfg"
@@ -159,7 +179,7 @@ def main(args: list) -> int:
         # Ready to build
         SETTING_BUILDERS_MAP[file_name](args.settings, args.output).build()
     except Exception as e:
-        print(str(e))
+        print(f"Error occurred: {e}\n" + "".join(traceback.format_tb(e.__traceback__)), file=sys.stderr, flush=True)
         rc = 1
     return rc
 
