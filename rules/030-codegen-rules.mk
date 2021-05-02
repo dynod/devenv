@@ -14,7 +14,8 @@ $(PYTHON_GEN_FOLDER)/%_pb2.py: $(PROTO_FOLDER)/$(PROTO_PACKAGE)/%.proto
 		python3 -m grpc_tools.protoc --proto_path $(PROTO_FOLDER) $(PROTO_DEPS_OPTIONS) --python_out $(SRC_FOLDER) --grpc_python_out $(SRC_FOLDER) $<
 
 # For package init
-$(PYTHON_GEN_INIT):
+$(PYTHON_GEN_INIT): $(PROTO_FILES)
+	$(FILE_STATUS) -t codegen --lang python -s "Generate package init file"
 	mkdir -p $(PYTHON_GEN_FOLDER)
 	echo "# Public generated API" > $(PYTHON_GEN_INIT)
 	for package in $(PYTHON_GEN_PACKAGES); do echo "from $$package import * # NOQA: F401,F403" >> $(PYTHON_GEN_INIT); done
