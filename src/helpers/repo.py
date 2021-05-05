@@ -222,7 +222,7 @@ class RepoHandler:
         # Commit & tag
         subprocess.check_call(["git", "add", release_manifest_name], cwd=workspace_project)
         subprocess.check_call(["git", "commit", "-m", f"Add release manifest for {current_n} {last_tag}"], cwd=workspace_project)
-        subprocess.check_call(["git", "tag", workspace_tag, "master"], cwd=workspace_project)
+        subprocess.check_call(["git", "tag", "-m", f"{current_n} release {last_tag}", workspace_tag, "master"], cwd=workspace_project)
 
         return f"Generated release manifest: {release_manifest}"
 
